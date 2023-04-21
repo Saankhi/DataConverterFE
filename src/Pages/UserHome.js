@@ -57,7 +57,7 @@ export default function UserHome() {
 
         const key = e.target.value
         console.log(key)
-        const result = await axios.get("http://localhost:9000/header/allheaders/" + key)
+        const result = await axios.get("https://extinct-crow-tie.cyclic.app/header/allheaders/" + key)
         try {
             setInputFileType(result.data.files.type)
             setInputFileHeaders(result.data.files.headers)
@@ -70,7 +70,7 @@ export default function UserHome() {
     const handelOutputFileFormat = async (e) => {
 
         const key = e.target.value
-        const result = await axios.get("http://localhost:9000/header/allheaders/" + key)
+        const result = await axios.get("https://extinct-crow-tie.cyclic.app/header/allheaders/" + key)
         try {
             setOutputFileName(result.data.files.name)
             setOutputFileType(result.data.files.type)

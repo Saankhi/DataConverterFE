@@ -54,7 +54,7 @@ export default function IPFileDefinition() {
             type: inputFileType,
             headers: Object.values(headersObj)
         }
-        const headers = await axios.post("http://localhost:9000/header/addheader", body)
+        const headers = await axios.post("https://extinct-crow-tie.cyclic.app/header/addheader", body)
         try {
             console.log(headers.data.message)
             navigate('/opfiledefinition')
