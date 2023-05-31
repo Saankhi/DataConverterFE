@@ -40,7 +40,7 @@ export default function SignUp() {
             password: password,
             role: role
         }
-        const result = await axios.post("https://extinct-crow-tie.cyclic.app/signup", body)
+        const result = await axios.post("http://localhost:1827/auth/signup", body)
 
         try {
             console.log(result.data.message)

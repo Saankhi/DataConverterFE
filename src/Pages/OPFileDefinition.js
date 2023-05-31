@@ -3,17 +3,20 @@ import axios from "axios"
 import Header from "../Components/Header"
 import { Form, FormLabel, FormControl, Button, Table, InputGroup } from "react-bootstrap"
 import * as MdIcons from "react-icons/md"
+import { useNavigate } from "react-router-dom"
 
 export default function OPFileDefinition() {
 
 
     const [fileFormat, setFileFormat] = useState(null)
     const [outputFileType, setOutputFileType] = useState(null)
+    const [outputFileFormat, setOutputFileFormat] = useState(null)
     const [description, setDescription] = useState(null)
     const [isClicked, setIsClicked] = useState(false)
     const [headersCount, setHeadersCount] = useState(null)
     const [headerTable, setHeaderTable] = useState(false)
     const [headersObj, setHeadersObj] = useState({})
+    const navigate = useNavigate();
 
     const addHeader = () => {
         setIsClicked(true)
@@ -49,11 +52,13 @@ export default function OPFileDefinition() {
         const body = {
             name: fileFormat,
             type: outputFileType,
+            format: outputFileFormat,
             headers: Object.values(headersObj)
         }
-        const headers = await axios.post("https://extinct-crow-tie.cyclic.app/header/addheader", body)
+        const headers = await axios.post("http://localhost:1827/header/addheader", body)
         try {
             console.log(headers.data.message)
+            navigate('/mapping')
         } catch (err) {
             console.log(err)
         }
@@ -61,7 +66,7 @@ export default function OPFileDefinition() {
 
     return (
         <>
-            <Header />
+
             <div className="input-group" style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "3rem", alignItems: "center" }}>
                 <h4>Output File Definition</h4><br />
 
@@ -74,7 +79,7 @@ export default function OPFileDefinition() {
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "15rem" }}>
                         <FormLabel style={{ width: "8rem" }}>File Type</FormLabel>
-                        <Form.Select value={outputFileType} onChange={(e) => setOutputFileType(e.target.value)}>
+                        <Form.Select value={outputFileFormat} onChange={(e) => setOutputFileFormat(e.target.value)}>
                             <option>Select type</option>
                             <option value=".json">JSON</option>
                             <option value="text/xml">XML</option>
@@ -83,22 +88,30 @@ export default function OPFileDefinition() {
                         </Form.Select>
                     </Form.Group>
 
+                    <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "16rem" }}>
+                        <FormLabel style={{ width: "12rem" }}>File Type</FormLabel>
+                        <Form.Select value={outputFileType} onChange={(e) => setOutputFileType(e.target.value)}>
+                            <option>Select type</option>
+                            <option value="output">Output</option>
+                        </Form.Select>
+                    </Form.Group>
+
                 </div><br />
 
                 <Form.Group style={{ display: "flex", width: "30rem" }}>
                     <FormLabel style={{ padding: "0.5rem" }}>Description</FormLabel>
-                    <FormControl type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe about input file..." />
+                    <FormControl type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe about output file..." />
                 </Form.Group><br />
 
                 {fileFormat && outputFileType && description ?
-                    <><Button variant="success" onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem" }}>+Add Header</Button><br /></> :
-                    <Button variant="success" disabled style={{ marginTop: "1rem", marginRight: "30rem" }}>+Add Header</Button>}
+                    <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button><br /></> :
+                    <Button disabled style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button>}
 
                 {isClicked ? (<div style={{ display: "flex" }}>
                     <p style={{ paddingRight: "1rem", paddingTop: "0.5rem" }}>Enter your desired number of headers </p>
                     <FormControl type="text" value={headersCount} onChange={(e) => setHeadersCount(e.target.value)} placeholder="Enter Value" style={{ width: "7rem" }} />
-                    {headersCount ? <Button variant="success" onClick={addTable} style={{ marginLeft: "1rem" }}>Add</Button>
-                        : <Button variant="success" disabled style={{ marginLeft: "1rem" }}>Add</Button>}
+                    {headersCount ? <Button onClick={addTable} style={{ marginLeft: "1rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Add</Button>
+                        : <Button disabled style={{ marginLeft: "1rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Add</Button>}
                 </div>) : null}
 
 
@@ -124,7 +137,7 @@ export default function OPFileDefinition() {
 
                     </Table><br />
 
-                    <Button variant="success" onClick={onAdd} style={{ margin: "0rem 2rem 1rem 50rem", width: "8rem" }}>Save</Button>
+                    <Button onClick={onAdd} style={{ margin: "0rem 2rem 1rem 50rem", width: "8rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Save</Button>
                 </>) : null}
 
             </div>

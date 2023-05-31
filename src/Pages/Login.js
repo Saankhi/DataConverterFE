@@ -16,13 +16,15 @@ export default function Login() {
             email: email,
             password: password
         }
-        const isPresent = await axios.post("https://extinct-crow-tie.cyclic.app/signin", body)
+        const isPresent = await axios.post("http://localhost:1827/auth/signin", body)
         try {
-            if (isPresent.data.profile[0].role !== "Admin") {
+            console.log(isPresent.data.details)
+            if (isPresent.data.details[0].role !== "Admin") {
                 navigate('/userhome')
                 console.log(isPresent.data.message)
             } else {
                 navigate('/adminhome')
+                localStorage.setItem('adminInfo', JSON.stringify(isPresent.data.details))
                 console.log(isPresent.data.message)
             }
         } catch (err) {

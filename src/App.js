@@ -7,6 +7,11 @@ import Login from "./Pages/Login";
 import SignUp from "./Pages/SignUp";
 import IPFileDefinition from "./Pages/IPFileDefinition";
 import OPFileDefinition from "./Pages/OPFileDefinition";
+import AdminAboutUs from "./Pages/AdminAboutUs";
+import AdminContactUs from "./Pages/AdminContactUs";
+import Template from "./Components/Template";
+import MyTemplates from "./Pages/MyTemplates";
+import Mapping from "./Pages/Mapping";
 
 
 export default function App() {
@@ -20,8 +25,11 @@ export default function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/userhome" element={<UserHome />} />
           <Route path="/adminhome" element={<AdminHome />} />
-          <Route path="/ipfiledefinition" element={<IPFileDefinition />} />
-          <Route path="/opfiledefinition" element={<OPFileDefinition />} />
+          <Route path="/mytemplates" element={<MyTemplates />} />
+          <Route path="/aboutus" element={<AdminAboutUs />} />
+          <Route path="/contactus" element={<AdminContactUs />} />
+          <Route path="/template" element={<Template />} />
+          <Route path="/mapping" element={<Mapping />} />
         </Routes>
       </>
     </Router>
