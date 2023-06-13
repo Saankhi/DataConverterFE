@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 export default function IPFileDefinition() {
 
 
-    const [fileFormat, setFileFormat] = useState(null)
+    const [inputFileName, setInputFileName] = useState(null)
     const [inputFileType, setInputFileType] = useState(null)
     const [inputFileFormat, setInputFileFormat] = useState(null)
     const [description, setDescription] = useState(null)
@@ -18,18 +18,21 @@ export default function IPFileDefinition() {
     const [headersObj, setHeadersObj] = useState({})
     const navigate = useNavigate()
 
+
     const addHeader = () => {
         setIsClicked(true)
     }
 
     const addTable = () => {
+
         setHeaderTable(true)
         var obj = {}
         for (let i = 1; i <= headersCount; i++) {
-            obj[i] = ""
+            obj[i] = { "headerValue": "" }
         }
         setHeadersObj(obj)
     }
+
 
 
     const handleKeyDown = (event) => {
@@ -39,8 +42,8 @@ export default function IPFileDefinition() {
     }
 
     const handleChange = (key, e) => {
-        console.log(e)
-        setHeadersObj({ ...headersObj, [key]: e.target.value })
+        // console.log(e)
+        setHeadersObj({ ...headersObj, [key]: { "headerValue": e.target.value } })
     }
 
     // const getHeaderObjValue = (key) => {
@@ -51,15 +54,17 @@ export default function IPFileDefinition() {
 
     const onAdd = async () => {
         const body = {
-            name: fileFormat,
-            type: inputFileType,
-            format: inputFileFormat,
-            headers: Object.values(headersObj)
+            fileName: inputFileName,
+            fileType: inputFileType,
+            fileFormat: inputFileFormat,
+            headersArray: Object.values(headersObj)
         }
+        console.log(body)
         const headers = await axios.post("http://localhost:1827/header/addheader", body)
         try {
             console.log(headers.data.message)
-            navigate('/opfiledefinition')
+            localStorage.setItem('ipFile', inputFileName)
+            // navigate('/opfiledefinition')
         } catch (err) {
             console.log(err)
         }
@@ -74,7 +79,7 @@ export default function IPFileDefinition() {
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center" }}>
                         <FormLabel style={{ width: "7rem" }}>File Name</FormLabel>
-                        <FormControl type="text" value={fileFormat} onChange={(e) => setFileFormat(e.target.value)} placeholder="Name of the input file format" />
+                        <FormControl type="text" value={inputFileName} onChange={(e) => setInputFileName(e.target.value)} placeholder="Name of the input file format" />
                     </Form.Group>
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "18rem" }}>
@@ -92,7 +97,7 @@ export default function IPFileDefinition() {
                         <FormLabel style={{ width: "12rem" }}>File Type</FormLabel>
                         <Form.Select value={inputFileType} onChange={(e) => setInputFileType(e.target.value)}>
                             <option>Select type</option>
-                            <option value="input">Input</option>
+                            <option value="Input">Input</option>
                         </Form.Select>
                     </Form.Group>
 
@@ -105,15 +110,15 @@ export default function IPFileDefinition() {
 
                 </Form.Group><br />
 
-                {fileFormat && inputFileType && description ?
-                    <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem" , backgroundColor:"#12B5B0", border:"none" , borderRadius:"1rem"}}>+Add Header</Button><br /></> :
-                    <Button disabled style={{ marginTop: "1rem", marginRight: "30rem",backgroundColor:"#12B5B0", border:"none" , borderRadius:"1rem" }}>+Add Header</Button>}
+                {inputFileName && inputFileType && description ?
+                    <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button><br /></> :
+                    <Button disabled style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button>}
 
                 {isClicked ? (<div style={{ display: "flex" }}>
                     <p style={{ paddingRight: "1rem", paddingTop: "0.5rem" }}>Enter your desired number of headers </p>
                     <FormControl type="text" value={headersCount} onChange={(e) => setHeadersCount(e.target.value)} placeholder="Enter Value" style={{ width: "7rem" }} />
-                    {headersCount ? <Button  onClick={addTable} style={{ marginLeft: "1rem" , backgroundColor:"#12B5B0", border:"none" , borderRadius:"1rem"}}>Add</Button>
-                        : <Button  disabled style={{ marginLeft: "1rem", backgroundColor:"#12B5B0", border:"none" , borderRadius:"1rem" }}>Add</Button>}
+                    {headersCount ? <Button onClick={addTable} style={{ marginLeft: "1rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Add</Button>
+                        : <Button disabled style={{ marginLeft: "1rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Add</Button>}
                 </div>) : null}
 
 
@@ -128,10 +133,11 @@ export default function IPFileDefinition() {
                         </thead>
                         <tbody>
                             {headerTable && headersCount ? ([...Array(parseInt(headersCount))].map((i, index) => {
+                                const header = headersObj[index + 1]
                                 return (
                                     <tr>
                                         <th>Header {index + 1}</th>
-                                        <th><InputGroup><FormControl type="text" value={headersObj[index + 1]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red" }} /></InputGroup></th>
+                                        <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red" }} /></InputGroup></th>
                                     </tr>
                                 )
                             })) : null}
@@ -139,7 +145,7 @@ export default function IPFileDefinition() {
 
                     </Table><br />
 
-                    <Button onClick={onAdd} style={{ margin: "0rem 2rem 1rem 50rem", width: "8rem", backgroundColor:"#12B5B0", border:"none" , borderRadius:"1rem" }} >Save</Button>
+                    <Button onClick={onAdd} style={{ margin: "0rem 2rem 1rem 50rem", width: "8rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Save</Button>
                 </>) : null}
 
             </div>

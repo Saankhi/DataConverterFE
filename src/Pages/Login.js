@@ -19,13 +19,14 @@ export default function Login() {
         const isPresent = await axios.post("http://localhost:1827/auth/signin", body)
         try {
             console.log(isPresent.data.details)
-            if (isPresent.data.details[0].role !== "Admin") {
+            if (isPresent?.data?.details[0]?.role !== "Admin") {
+                localStorage.setItem('isLoggedIn' , true)
+                localStorage.setItem('userInfo', JSON.stringify(isPresent.data.details))
                 navigate('/userhome')
-                console.log(isPresent.data.message)
             } else {
+                localStorage.setItem('isLoggedIn' , true)
                 navigate('/adminhome')
-                localStorage.setItem('adminInfo', JSON.stringify(isPresent.data.details))
-                console.log(isPresent.data.message)
+                localStorage.setItem('userInfo', JSON.stringify(isPresent.data.details))
             }
         } catch (err) {
             console.log(err)

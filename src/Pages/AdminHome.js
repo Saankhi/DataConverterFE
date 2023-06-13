@@ -5,7 +5,7 @@ import Header from "../Components/Header"
 export default function AdminHome() {
     return (
         <>
-            <Header />
+            {/* <Header /> */}
             <div style={{ textAlign: 'center', marginTop: '200px' }}>
                 <h1>WELCOME TO OUR <b style={{ color: "#12B5B0" }} >WEBSITE</b></h1>
                 <h4>DATA CONVERTER</h4>

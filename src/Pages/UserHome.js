@@ -3,7 +3,7 @@ import { Button, Form, Container, Col, Row } from "react-bootstrap";
 import * as XLSX from "xlsx";
 import * as js2xmlparser from "js2xmlparser";
 import PopUp from "../Components/PopUp";
-import Header from "../Components/Header";
+import HeaderUser from "../Components/HeaderUser";
 import axios from "axios"
 
 
@@ -185,7 +185,7 @@ export default function UserHome() {
 
     return (
         <>
-            <Header />
+            {/* <HeaderUser /> */}
             <div className="body" style={{ padding: "1rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "calc(100vh - 56px)" }}>
 
                 <div className="input-group" style={{ display: "flex", flexDirection: "column" }}>
