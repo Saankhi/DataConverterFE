@@ -139,7 +139,7 @@ export default function IPFileDefinition() {
 
                     </Table><br />
 
-                    <Button onClick={onAdd} style={{ margin: "0rem 2rem 1rem 50rem", width: "8rem", backgroundColor:"#12B5B0", border:"none" , borderRadius:"1rem" }}>Save</Button>
+                    <Button onClick={onAdd} style={{ margin: "0rem 2rem 1rem 50rem", width: "8rem", backgroundColor:"#12B5B0", border:"none" , borderRadius:"1rem" }} >Save</Button>
                 </>) : null}
 
             </div>

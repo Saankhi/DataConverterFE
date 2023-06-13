@@ -3,3 +3,29 @@
   background-size: cover;
 
 }
+.life li {
+  list-style: none;
+  text-align: center;
+}
+.life li select{
+  border-radius: 8px;
+}
+.hdfc li {
+  list-style: none;
+  text-align: center;
+}
+
+.save{
+  background-color: #12B5B0;
+  width: 214px;
+  height: 58px;
+  border-radius: 20px;
+  margin-left: 250px;
+  color: #fff;
+}
+.mbody{
+ 
+  background: linear-gradient(to bottom, skyblue 40%, white 40%);
+
+  background-size: cover;
+}

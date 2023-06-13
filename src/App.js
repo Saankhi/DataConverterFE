@@ -12,6 +12,7 @@ import AdminContactUs from "./Pages/AdminContactUs";
 import Template from "./Components/Template";
 import MyTemplates from "./Pages/MyTemplates";
 import Mapping from "./Pages/Mapping";
+import Header from "./Components/Header";
 
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/contactus" element={<AdminContactUs />} />
           <Route path="/template" element={<Template />} />
           <Route path="/mapping" element={<Mapping />} />
+          <Route path="/header" element={<Header />} />
         </Routes>
       </>
     </Router>

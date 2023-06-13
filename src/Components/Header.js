@@ -33,10 +33,10 @@ export default function Header() {
                                 <Nav.Link href="/aboutus"><Button variant="light" style={{ backgroundColor: "black", color: "white" }}>About Us</Button></Nav.Link>
                                 <Nav.Link href="/contactus"><Button variant="light" style={{ backgroundColor: "black", color: "white" }}>Contact Us</Button></Nav.Link>
                                 <div style={{ display: "flex", flexDirection: "column" }}>
-                                    <Button variant="light" style={{backgroundColor:"black" ,color:"white", border:"none"}} onClick={() => setOpen(true)}><CgIcons.CgProfile style={{ width: "4rem", color: "white", height: "2.5rem" }} /></Button>
-                                    <ProfilePopUp 
-                                    show={open}
-                                    onHide={() => setOpen(false)}
+                                    <Button variant="light" style={{ backgroundColor: "black", color: "white", border: "none" }} onClick={() => setOpen(true)} ><CgIcons.CgProfile style={{ width: "4rem", color: "white", height: "2.5rem" }} /></Button>
+                                    <ProfilePopUp
+                                        show={open}
+                                        onHide={() => setOpen(false)}
                                     />
                                     {/* <p style={{color:"white"}}>Profile</p> */}
                                 </div>

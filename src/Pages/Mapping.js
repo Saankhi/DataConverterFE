@@ -9,6 +9,8 @@ export default function Mapping() {
         console.log(option)
         // navigate('/')
     }
+
+    
     return (
         <>
             <div style={{ display: 'flex', justifyContent: "space-evenly", marginLeft: '350px' }}><h1 >Field Mapping</h1>
