@@ -3,28 +3,26 @@ import axios from "axios"
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
-// import Editprofile from "./Editprofile";
+import EditProfilePopUp from "./EditProfilePopUp";
 
 export default function ProfilePopUp(props) {
     const navigate = useNavigate();
     const [modalShow, setModalShow] = useState(false);
     const [adminInfo, setAdminInfo] = useState([])
 
-    const click = () => {
-        navigate('/Editprofile')
-    }
+    // const click = () => {
+    //     navigate('/Editprofile')
+    // }
 
     useEffect(() => {
         adminDetails();
-    })
+    }, [])
 
 
     const adminDetails = () => {
         const admin = JSON.parse(localStorage.getItem('adminInfo'))
         if (admin) setAdminInfo(admin)
     }
-
-
 
 
     return (
@@ -39,13 +37,13 @@ export default function ProfilePopUp(props) {
             >
 
                 <Modal.Body className="mbody">
-                    <div style={{display:"flex" , alignItems:"center" ,justifyContent:"space-around"}} >
-                        <div style={{ display: 'flex', flexDirection: "column", marginLeft: '60px' }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }} >
+                        <div style={{ display: 'flex', flexDirection: "column", marginLeft: '0px' }}>
                             <img src="https://d38b044pevnwc9.cloudfront.net/cutout-nuxt/enhancer/2.jpg" width='200px' height='200px' style={{ borderRadius: '100px', marginTop: '50px', marginBottom: '30px' }} />
                             <p>{adminInfo[0].firstName} {adminInfo[0].lastName}</p>
                             <p>{adminInfo[0].role}</p>
                         </div>
-                        <div>
+                        <div style={{ marginTop: '200px' }}>
                             <p>Mobile:{adminInfo[0].mobile}</p>
                             <p>Email:{adminInfo[0].email}</p>
                             <p>Password:*********</p>
@@ -56,10 +54,10 @@ export default function ProfilePopUp(props) {
                         onClick={() => setModalShow(true)}>
                         Edit Profile
                     </Button>
-                    {/* <Editprofile
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                /> */}
+                    {/* <EditProfilePopUp
+                        show={modalShow}
+                        onHide={() => setModalShow(false)}
+                    /> */}
                 </Modal.Body>
 
             </Modal>

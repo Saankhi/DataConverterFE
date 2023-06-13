@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 export default function OPFileDefinition() {
 
 
-    const [fileFormat, setFileFormat] = useState(null)
+    const [outputFileName, setOutputFileName] = useState(null)
     const [outputFileType, setOutputFileType] = useState(null)
     const [outputFileFormat, setOutputFileFormat] = useState(null)
     const [description, setDescription] = useState(null)
@@ -26,7 +26,7 @@ export default function OPFileDefinition() {
         setHeaderTable(true)
         var obj = {}
         for (let i = 1; i <= headersCount; i++) {
-            obj[i] = ""
+            obj[i] = { "headerValue": "" }
         }
         setHeadersObj(obj)
     }
@@ -39,25 +39,28 @@ export default function OPFileDefinition() {
     }
 
     const handleChange = (key, e) => {
-        setHeadersObj({ ...headersObj, [key]: e.target.value })
+        setHeadersObj({ ...headersObj, [key]: { "headerValue": e.target.value } })
     }
 
-    const getHeaderObjValue = (key) => {
-        return headersObj[key]
-    }
+    // const getHeaderObjValue = (key) => {
+    //     return headersObj[key]
+    // }
 
 
 
     const onAdd = async () => {
         const body = {
-            name: fileFormat,
-            type: outputFileType,
-            format: outputFileFormat,
-            headers: Object.values(headersObj)
+            fileName: outputFileName,
+            fileType: outputFileType,
+            fileFormat: outputFileFormat,
+            headersArray: Object.values(headersObj)
         }
+
+        console.log(body)
         const headers = await axios.post("http://localhost:1827/header/addheader", body)
         try {
             console.log(headers.data.message)
+            localStorage.setItem('opFile', outputFileName)
             navigate('/mapping')
         } catch (err) {
             console.log(err)
@@ -74,7 +77,7 @@ export default function OPFileDefinition() {
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center" }}>
                         <FormLabel style={{ width: "7rem" }}>File Name</FormLabel>
-                        <FormControl type="text" value={fileFormat} onChange={(e) => setFileFormat(e.target.value)} placeholder="Name of the output file format" />
+                        <FormControl type="text" value={outputFileName} onChange={(e) => setOutputFileName(e.target.value)} placeholder="Name of the output file format" />
                     </Form.Group>
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "15rem" }}>
@@ -92,7 +95,7 @@ export default function OPFileDefinition() {
                         <FormLabel style={{ width: "12rem" }}>File Type</FormLabel>
                         <Form.Select value={outputFileType} onChange={(e) => setOutputFileType(e.target.value)}>
                             <option>Select type</option>
-                            <option value="output">Output</option>
+                            <option value="Output">Output</option>
                         </Form.Select>
                     </Form.Group>
 
@@ -103,7 +106,7 @@ export default function OPFileDefinition() {
                     <FormControl type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe about output file..." />
                 </Form.Group><br />
 
-                {fileFormat && outputFileType && description ?
+                {outputFileName && outputFileType && description ?
                     <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button><br /></> :
                     <Button disabled style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button>}
 
@@ -126,10 +129,11 @@ export default function OPFileDefinition() {
                         </thead>
                         <tbody>
                             {headerTable && headersCount ? ([...Array(parseInt(headersCount))].map((i, index) => {
+                                const header = headersObj[index + 1]
                                 return (
                                     <tr>
                                         <th>Header {index + 1}</th>
-                                        <th><InputGroup><FormControl type="text" value={getHeaderObjValue(index + 1)} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red" }} /></InputGroup></th>
+                                        <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red" }} /></InputGroup></th>
                                     </tr>
                                 )
                             })) : null}
