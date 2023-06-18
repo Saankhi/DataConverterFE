@@ -33,16 +33,23 @@ export default function Mapping() {
     const [ipFile, setIPFile] = useState()
     const [showOP, setShowOp] = useState(false)
     const [showIP, setShowIp] = useState(false)
-    const [selectedOptions, setSelectedOptions] = useState([])
-    const [opSelect, setOPSelect] = useState({ idx: 0 })
+    const [selectedOptions, setSelectedOptions] = useState({})
+    const [opSelect, setOPSelect] = useState({})
 
-    // const ipFileName = localStorage.getItem('ipFile')
-    // const opFileName = localStorage.getItem('opFile')
+
 
     const handleChangeOP = (idx, e) => {
-        setOPSelect({ [idx]: e.target.value })
+
+        setOPSelect({ ...opSelect, [idx]: e.target.value })
     }
 
+    console.log(opSelect)
+
+    const handleChange = (e, idx) => {
+        setSelectedOptions({ ...selectedOptions, [idx]: e.target.value })
+    }
+
+    console.log(selectedOptions)
 
 
     useEffect(() => {
@@ -53,7 +60,6 @@ export default function Mapping() {
         const data = await axios.get("http://localhost:1827/header/allfiles")
         try {
             setFileNamesData(data.data.fileTypeDetails)
-            console.log(data.data.fileTypeDetails)
         } catch (err) {
             console.log("Error retreving data")
         }
@@ -63,7 +69,6 @@ export default function Mapping() {
     const getHeaders = async (key) => {
         const data = await axios.get("http://localhost:1827/header/allheaders/" + key)
         const headersResult = data.data.headersDetails
-        console.log(key, headersResult)
         var isOutput = false
         headersResult.filter((obj) => {
             if (obj.fileType === "Output") {
@@ -73,11 +78,12 @@ export default function Mapping() {
         try {
             if (isOutput) {
                 setOPFileHeadersData(data.data.headersDetails)
-                console.log("OP file : ", data.data.headersDetails)
             }
             else {
                 setIPFileHeadersData(data.data.headersDetails)
-                console.log("IP file : ", data.data.headersDetails)
+                data.data.headersDetails.map((item, idx) => {
+                    setSelectedOptions((prevState) => { return { ...prevState, [idx]: [] } })
+                })
             }
         } catch (err) {
             console.log("Error retreving data")
@@ -85,13 +91,32 @@ export default function Mapping() {
     }
 
 
-    const onSave = () => {
+    const onSave = async () => {
+        const obj = {}
 
+        for (const [key, value] of Object.entries(opSelect)) {
+            obj[value] = selectedOptions[key]
+        }
+
+        const body = {
+            ipFile: ipFile,
+            opFile: opFile,
+            mappedHeaders: obj
+        }
+        console.log(body)
+        const headers = await axios.post("http://localhost:1827/header/addmapping", body)
+        try {
+            console.log(headers.data.message)
+
+        } catch (err) {
+            console.log(err)
+        }
     }
+
+
 
     return (
         <>
-            {/* <Header /> */}
             <div style={{ display: 'flex', justifyContent: "space-evenly", marginLeft: '350px' }}><h1 >Field Mapping</h1>
                 <a href="" style={{ marginTop: '20px' }}>Load Saved Mapping</a></div>
             <div style={{ justifyContent: 'space-between', display: 'flex', backgroundColor: 'black', color: '#fff', height: "3rem" }}>
@@ -122,7 +147,7 @@ export default function Mapping() {
                                     return <option>{file.fileName}</option>
                             })}
 
-                        </Form.Select>) : (<Form.Select value={opFile} onChange={(e) => setOPFile(e.target.value)}>
+                        </Form.Select>) : (<Form.Select>
                             <option>Input Format Type</option>
                         </Form.Select>)}
                 </div>
@@ -131,7 +156,7 @@ export default function Mapping() {
                 {showOP ? (<>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div style={{ backgroundColor: '#12B5B0', width: '30rem', height: "calc(100vh - 178px)" }} className="life">
-                            {opFileHeadersData.map((idx) => {
+                            {opFileHeadersData.map((item, idx) => {
                                 return (
                                     <>
                                         <li style={{ marginTop: '10px', display: "flex", alignItems: "center" }}>
@@ -148,28 +173,36 @@ export default function Mapping() {
                                 )
                             })}
                         </div>
-                        {showIP ? (<div style={{ backgroundColor: '#A9ECFB', width: '30rem', height: "calc(100vh - 178px)" }} className="hdfc">
+                        {showIP ? (<div style={{ backgroundColor: '#A9ECFB', width: '25rem', height: "calc(100vh - 178px)" }} className="hdfc">
 
-                            {ipFileHeadersData.map((file) => {
+                            {ipFileHeadersData.map((file, idx) => {
                                 return (
                                     <><li style={{ marginTop: '10px' }}>
-                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                            <Form.Select>
-                                                <option>Select</option>
-                                                {ipFileHeadersData.map((file) => {
-                                                    return (
-                                                        <option value={file.headerValues}>{file.headerValues}</option>
-                                                    )
-                                                })}
-                                            </Form.Select>
+                                        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
 
-                                            <Button style={{ margin: "auto" }}>Save</Button>
+                                            <FormControl sx={{ m: 1, ml: 12, width: 250 }}>
+                                                <InputLabel id="demo-multiple-checkbox-label">Select</InputLabel>
+                                                <Select
+                                                    multiple
+                                                    value={selectedOptions[idx]}
+                                                    onChange={(e) => handleChange(e, idx)}
+                                                    input={<OutlinedInput label="Tag" />}
+                                                    renderValue={(selected) => selected.join(', ')}
+                                                    MenuProps={MenuProps}
+                                                >
+                                                    {ipFileHeadersData.map((name) => (
+                                                        <MenuItem key={name.headerValues} value={name.headerValues}>
+                                                            <Checkbox checked={selectedOptions[idx].includes(name.headerValues)} />
+                                                            <ListItemText primary={name.headerValues} />
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            </FormControl>
                                         </div>
                                     </li><hr /></>
                                 )
                             })}
-                            {/* <button className="save">Save</button> */}
-                            {/* <Button style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem" }}>Save</Button> */}
+                            <Button onClick={onSave} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem" }}>Save</Button>
 
                         </div>) : null}
                     </div>

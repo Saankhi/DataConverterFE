@@ -8,6 +8,7 @@ import ProfilePopUp from "./ProfilePopUp";
 export default function Header() {
 
     const [open, setOpen] = useState(false)
+    const [modalShow, setModalShow] = useState(false)
 
     return (
         <>

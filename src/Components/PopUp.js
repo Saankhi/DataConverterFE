@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal , Button } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 
 export default function PopUp(props) {
     return (
@@ -14,7 +14,7 @@ export default function PopUp(props) {
                     <h5>Your file has been successfully converted.Please download it.</h5>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={props.onHide}>Ok</Button>
+                    <Button onClick={(props.onHide, props.opData)}>Ok</Button>
                 </Modal.Footer>
             </Modal>
         </>
