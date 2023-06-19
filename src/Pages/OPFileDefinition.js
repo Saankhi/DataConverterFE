@@ -60,7 +60,6 @@ export default function OPFileDefinition() {
         const headers = await axios.post("http://localhost:1827/header/addheader", body)
         try {
             console.log(headers.data.message)
-            localStorage.setItem('opFile', outputFileName)
             navigate('/mapping')
         } catch (err) {
             console.log(err)

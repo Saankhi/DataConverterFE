@@ -10,24 +10,33 @@ export default function ProfilePopUp(props) {
     const [modalShow, setModalShow] = useState(false);
     const [adminInfo, setAdminInfo] = useState([])
 
-    // const click = () => {
-    //     navigate('/Editprofile')
-    // }
+
 
     useEffect(() => {
         adminDetails();
-    }, [])
+    }, [adminInfo])
 
 
-    const adminDetails = () => {
-        const admin = JSON.parse(localStorage.getItem('adminInfo'))
-        if (admin) setAdminInfo(admin)
+
+    const adminDetails = async () => {
+
+        const details = JSON.parse(localStorage.getItem('userInfo'))
+        const key = details[0].email
+
+        const result = await axios.get("http://localhost:1827/auth/allusers/" + key)
+        try {
+            setAdminInfo(result.data.details)
+        } catch (err) {
+            console.log("Error retreiving the details")
+        }
+
     }
+
 
 
     return (
 
-        adminInfo.length > 0 ? (<>
+        <>
             <Modal
                 {...props}
                 size="lg"
@@ -35,33 +44,47 @@ export default function ProfilePopUp(props) {
                 centered
                 className="modal"
             >
-
+                <Modal.Header closeButton style={{ backgroundColor: 'skyblue' }}>
+                </Modal.Header>
                 <Modal.Body className="mbody">
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }} >
                         <div style={{ display: 'flex', flexDirection: "column", marginLeft: '0px' }}>
                             <img src="https://d38b044pevnwc9.cloudfront.net/cutout-nuxt/enhancer/2.jpg" width='200px' height='200px' style={{ borderRadius: '100px', marginTop: '50px', marginBottom: '30px' }} />
-                            <p>{adminInfo[0].firstName} {adminInfo[0].lastName}</p>
-                            <p>{adminInfo[0].role}</p>
+                            {adminInfo.map((prof) => {
+                                return (
+                                    <><div style={{ display: 'flex' }}>
+                                        <div>
+                                            <p>{prof.firstName} {prof.lastName}</p>
+                                            <p>{prof.role}</p>
+                                        </div>
+                                        <div style={{ marginLeft: '250px' }}>
+                                            <p>Mobile:{prof.mobile}</p>
+                                            <p>Email:{prof.email}</p>
+                                            <p>Password:{prof.password}</p>
+                                        </div>
+                                    </div>
+                                    </>
+                                )
+                            })}
+
                         </div>
-                        <div style={{ marginTop: '200px' }}>
-                            <p>Mobile:{adminInfo[0].mobile}</p>
-                            <p>Email:{adminInfo[0].email}</p>
-                            <p>Password:*********</p>
-                        </div>
+
                     </div>
                     <Button variant="primary"
                         style={{ marginLeft: '350px', width: '200px', borderRadius: '10px', backgroundColor: '#12B5B0', marginBottom: '30px' }}
-                        onClick={() => setModalShow(true)}>
+                        onClick={() => { setModalShow(true) }}>
+
                         Edit Profile
                     </Button>
-                    {/* <EditProfilePopUp
+                    <EditProfilePopUp
                         show={modalShow}
                         onHide={() => setModalShow(false)}
-                    /> */}
+                        adminInfo={adminInfo}
+                    />
                 </Modal.Body>
 
             </Modal>
-        </>) : null
+        </>
 
 
 

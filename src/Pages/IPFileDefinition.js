@@ -42,13 +42,9 @@ export default function IPFileDefinition() {
     }
 
     const handleChange = (key, e) => {
-        // console.log(e)
         setHeadersObj({ ...headersObj, [key]: { "headerValue": e.target.value } })
     }
 
-    // const getHeaderObjValue = (key) => {
-    //     return headersObj[key]
-    // }
 
 
 
@@ -63,8 +59,6 @@ export default function IPFileDefinition() {
         const headers = await axios.post("http://localhost:1827/header/addheader", body)
         try {
             console.log(headers.data.message)
-            localStorage.setItem('ipFile', inputFileName)
-            // navigate('/opfiledefinition')
         } catch (err) {
             console.log(err)
         }

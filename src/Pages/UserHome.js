@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Button, Form, Container, Col, Row } from "react-bootstrap";
 import * as XLSX from "xlsx";
 import * as js2xmlparser from "js2xmlparser";
@@ -20,6 +20,11 @@ export default function UserHome() {
 
     const [inputFileHeaders, setInputFileHeaders] = useState([])
     const [outputFileHeaders, setOutputFileHeaders] = useState([])
+    const [fileNamesData, setFileNamesData] = useState([])
+    const [ipFile, setIPFile] = useState()
+    const [opFile, setOPFile] = useState()
+    const [mappedHeaders, setMappedHeaders] = useState({})
+    const [ipJSONData, setIPJSONData] = useState([])
 
 
 
@@ -52,40 +57,80 @@ export default function UserHome() {
         }
     }
 
+    useEffect(() => {
+        getFileNames();
+    }, [])
+
+
+    const getMappedHeaders = async () => {
+        const body = {
+            ipFileName: ipFile,
+            opFileName: outputFileName
+        }
+        const result = await axios.post("http://localhost:1827/header/usermapping", body)
+        try {
+            setMappedHeaders(result.data.mappedHeaders)
+            console.log(result.data.mappedHeaders)
+        } catch (err) {
+            console.log("Error retreving data")
+            console.log(err)
+        }
+    }
 
     const handelInputFileFormat = async (e) => {
 
         const key = e.target.value
-        console.log(key)
-        const result = await axios.get("https://extinct-crow-tie.cyclic.app/header/allheaders/" + key)
+        const result = await axios.get("http://localhost:1827/header/allheaders/" + key)
         try {
-            setInputFileType(result.data.files.type)
-            setInputFileHeaders(result.data.files.headers)
+            setIPFile(key)
+            setInputFileType(result.data.headersDetails[0].fileFormat)
+            setInputFileHeaders(result.data.headersDetails)
         } catch (err) {
             console.log("Error")
         }
     }
 
+    // console.log(inputFileHeaders)
 
     const handelOutputFileFormat = async (e) => {
 
         const key = e.target.value
-        const result = await axios.get("https://extinct-crow-tie.cyclic.app/header/allheaders/" + key)
+        const result = await axios.get("http://localhost:1827/header/allheaders/" + key)
         try {
-            setOutputFileName(result.data.files.name)
-            setOutputFileType(result.data.files.type)
-            setOutputFileHeaders(result.data.files.headers)
+            setOPFile(key)
+            setOutputFileName(result.data.headersDetails[0].fileName)
+            setOutputFileType(result.data.headersDetails[0].fileFormat)
+            setOutputFileHeaders(result.data.headersDetails)
+
         } catch (err) {
             console.log("Error")
         }
     }
 
-    // console.log(inputFileType)
-    // console.log(outputFileType)
+    // console.log(outputFileHeaders)
+
+    const getFileNames = async () => {
+        const data = await axios.get("http://localhost:1827/header/allfiles")
+        try {
+            setFileNamesData(data.data.fileTypeDetails)
+            // console.log(data.data.fileTypeDetails)
+        } catch (err) {
+            console.log("Error retreving data")
+        }
+    }
+
+
+
+
 
     // Conerting input file data to JSON ::::  filtering in this segment ::::
 
+    console.log(mappedHeaders)
+    const headerArrays = Object.values(mappedHeaders)
+
     async function convertData() {
+
+        getMappedHeaders();
         if (inputFileType !== "text/xml") {
 
             const data = await inputFile.arrayBuffer();
@@ -94,29 +139,27 @@ export default function UserHome() {
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet)
 
-            const inputHeaders = Object.keys(jsonData[0])
+            console.log("ipData:", jsonData)
+            setIPJSONData(jsonData)
 
-            const unselectedHeaders = inputHeaders.filter((ipHeader) => {
-                var isPresent = false
-                outputFileHeaders.forEach((opHeader) => {
-                    if (ipHeader === opHeader) {
-                        isPresent = true
-                    }
-                })
-                return !isPresent
-            })
 
-            console.log(unselectedHeaders)
+            // const unselectedHeaders = inputHeaders.filter((ipHeader) => {
+            //     var isPresent = false
+            //     outputFileHeaders.forEach((opHeader) => {
+            //         if (ipHeader === opHeader) {
+            //             isPresent = true
+            //         }
+            //     })
+            //     return !isPresent
+            // })
 
-            jsonData.forEach((obj) => {
-                unselectedHeaders.forEach((header) => {
-                    delete (obj[header])
-                })
-            })
+            // console.log(unselectedHeaders)
 
-            console.log(jsonData)
-            setParsedData(jsonData)
-
+            // jsonData.forEach((obj) => {
+            //     unselectedHeaders.forEach((header) => {
+            //         delete (obj[header])
+            //     })
+            // })
         }
 
         else {
@@ -141,6 +184,41 @@ export default function UserHome() {
 
     }
 
+
+    // Data conersion to opData 
+
+
+    function OPJSONData() {
+
+        ipJSONData.forEach((obj) => {
+            headerArrays.map((arr) => {
+                if (arr.length !== 1) {
+                    const newHeader = Object.keys(mappedHeaders).find(key => mappedHeaders[key] === arr)
+                    for (let i = 0; i < arr.length; i++) {
+                        if (i === 0) {
+                            obj[newHeader] = obj[arr[i]] + " "
+                        } else {
+                            obj[newHeader] += obj[arr[i]] + " "
+
+                        }
+                        delete obj[arr[i]]
+                    }
+                } else {
+                    const header = arr[0]
+                    const newHeader = Object.keys(mappedHeaders).find(key =>
+                        mappedHeaders[key] === arr)
+                    obj[newHeader] = obj[header]
+                    delete obj[header]
+                }
+
+            })
+
+        })
+
+        console.log("opData: ", ipJSONData)
+        setParsedData(ipJSONData)
+    }
+
     // Converting JSON data to Ouput file type(extract) ::::
 
     async function extractParsedData() {
@@ -149,8 +227,8 @@ export default function UserHome() {
 
             const jsonSheet = XLSX.utils.json_to_sheet(parsedData)
             var newWb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(newWb, jsonSheet, "TVChars")
-            return XLSX.writeFile(newWb, outputFileName + outputFileType)
+            XLSX.utils.book_append_sheet(newWb, jsonSheet, "Sheet1")
+            return XLSX.writeFile(newWb, outputFileName + ".xlsx")
         }
 
         // JSON to XML -- Needs to be extracted ::::
@@ -192,49 +270,34 @@ export default function UserHome() {
                     <h3 className="text-center">Select your input</h3><br />
 
                     <div className="input-group-selector" style={{ display: "flex", justifyContent: "space-evenly" }}>
-                        <Form.Select onChange={(e) => handelInputFileFormat(e)} style={{ width: "11rem" }}>
+                        <Form.Select value={ipFile} onChange={(e) => handelInputFileFormat(e)} style={{ width: "11rem" }}>
                             <option>Input File Format</option>
-                            <option value="HDFC Bank Input">HDFC Bank Input</option>
-                            <option value="Axis Bank Input">Axis Bank Input</option>
+                            {fileNamesData.length > 0 ? (<>
+                                {fileNamesData.map((file) => {
+                                    if (file.fileType === "Input")
+                                        return <option>{file.fileName}</option>
+                                })}
+                            </>) : null}
+
 
                         </Form.Select>
 
                         <input type="file" accept={inputFileType} onChange={(e) => handleFile(e)} />
 
-                        <Form.Select onChange={(e) => handelOutputFileFormat(e)} style={{ width: "11.5rem" }}>
+                        <Form.Select value={opFile} onChange={(e) => handelOutputFileFormat(e)} style={{ width: "11.5rem" }}>
                             <option>Output File Format</option>
-                            <option value="LIC Insurance">LIC Insurance</option>
-                            <option value="Tata AIG">TATA AIG</option>
+                            {fileNamesData.length > 0 ? (<>
+                                {fileNamesData.map((file) => {
+                                    if (file.fileType === "Output")
+                                        return <option>{file.fileName}</option>
+                                })}
+                            </>) : null}
 
                         </Form.Select>
                     </div>
                 </div>
 
                 <br /> <br />
-
-
-                {/* {parsedData ? (<>
-                    <Container>
-                        <Row>
-                            <h6>Your Output File Header Checklist :</h6>
-                            {inputHeaders.map((header) => {
-                                return (
-                                    <Col>
-                                        <Form.Check
-                                            inline
-                                            label={header}
-                                            value={header}
-                                            name="group1"
-                                            type="checkbox"
-                                            id={header}
-                                            onChange={handelChange}
-                                        />
-                                    </Col>
-                                )
-                            })}
-                        </Row>
-                    </Container>
-                </>) : null} */}
 
 
 
@@ -268,13 +331,14 @@ export default function UserHome() {
 
                 {parsedData ?
                     <Button variant="outline-success" onClick={extractParsedData}>Download File</Button> :
-                    (inputFileType && inputFile && outputFileType ?
+                    (ipFile && inputFile && opFile ?
                         <Button variant="success" onClick={() => { convertData(); setOpen(true) }}>Convert File</Button>
                         : <Button variant="success" disabled>Convert File</Button>)}
             </div>
             <PopUp
                 show={open}
-                onHide={() => { setOpen(false) }} />
+                onHide={() => { setOpen(false) }}
+                opData={OPJSONData} />
         </>
     )
 }

@@ -3,6 +3,10 @@
   background-size: cover;
 
 }
+body{
+  background-image: url('https://static.vecteezy.com/system/resources/thumbnails/007/937/895/small/modern-low-poly-light-blue-triangle-shapes-background-free-vector.jpg');
+  background-size: cover;
+}
 
 .mbody {
   background: linear-gradient(to bottom, skyblue 40%, white 40%);
@@ -25,4 +29,8 @@
   border-radius: 20px;
   margin-left: 250px;
   color: #fff;
+}
+.ebody{
+  display: flex;
+  height: 500px;
 }
