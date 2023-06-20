@@ -10,23 +10,6 @@ import { Modal } from "react-bootstrap";
 
 
 
-
-const dummydata = [
-    {
-        input: "hdfc",
-        output: "lic"
-    },
-    {
-        input: "canara",
-        output: "sree"
-    },
-    {
-        input: "sbi",
-        output: "sri"
-    },
-]
-
-
 export default function MyTemplates() {
 
     const [lgShow, setLgShow] = useState(false);
