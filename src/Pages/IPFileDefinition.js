@@ -18,6 +18,8 @@ export default function IPFileDefinition() {
     const [headersObj, setHeadersObj] = useState({})
     const navigate = useNavigate()
 
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    const userDept = userInfo[0].department
 
     const addHeader = () => {
         setIsClicked(true)
@@ -53,7 +55,8 @@ export default function IPFileDefinition() {
             fileName: inputFileName,
             fileType: inputFileType,
             fileFormat: inputFileFormat,
-            headersArray: Object.values(headersObj)
+            headersArray: Object.values(headersObj),
+            department: userDept
         }
         console.log(body)
         const headers = await axios.post("http://localhost:1827/header/addheader", body)

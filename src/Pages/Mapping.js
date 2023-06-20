@@ -37,7 +37,6 @@ export default function Mapping() {
     const [opSelect, setOPSelect] = useState({})
 
 
-
     const handleChangeOP = (idx, e) => {
 
         setOPSelect({ ...opSelect, [idx]: e.target.value })
@@ -56,8 +55,12 @@ export default function Mapping() {
         getFileNames();
     }, [])
 
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    const key = userInfo[0].department
+
     const getFileNames = async () => {
-        const data = await axios.get("http://localhost:1827/header/allfiles")
+        const data = await axios.get("http://localhost:1827/header/allfiles/" + key)
         try {
             setFileNamesData(data.data.fileTypeDetails)
         } catch (err) {

@@ -18,6 +18,9 @@ export default function OPFileDefinition() {
     const [headersObj, setHeadersObj] = useState({})
     const navigate = useNavigate();
 
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    const userDept = userInfo[0].department
+
     const addHeader = () => {
         setIsClicked(true)
     }
@@ -53,7 +56,8 @@ export default function OPFileDefinition() {
             fileName: outputFileName,
             fileType: outputFileType,
             fileFormat: outputFileFormat,
-            headersArray: Object.values(headersObj)
+            headersArray: Object.values(headersObj),
+            department: userDept
         }
 
         console.log(body)
