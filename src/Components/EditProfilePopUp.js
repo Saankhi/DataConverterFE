@@ -31,6 +31,7 @@ export default function EditProfilePopUp(props) {
         try {
             console.log(result.data.message)
             console.log(result.data.data)
+            props.onHide();
         } catch (error) {
             console.log(error)
         }
@@ -62,18 +63,12 @@ export default function EditProfilePopUp(props) {
                                 <Form.Label>Last Name</Form.Label>
                                 <Form.Control type="text" value={lastname} onChange={(e) => setlastname(e.target.value)} />
                             </Form.Group>
-                            <Form.Group >
-                                <Form.Label>Role</Form.Label>
-                                <Form.Control type="text" value={role} onChange={(e) => setrole(e.target.value)} />
-                            </Form.Group>
+
                             <Form.Group >
                                 <Form.Label>Mobile</Form.Label>
                                 <Form.Control type="text" value={mobile} onChange={(e) => setMobile(e.target.value)} />
                             </Form.Group>
-                            <Form.Group >
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control type="email" value={email} onChange={(e) => setemail(e.target.value)} />
-                            </Form.Group>
+
                             <Form.Group >
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control type="text" value={password} onChange={(e) => setpassword(e.target.value)} />

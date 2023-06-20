@@ -60,6 +60,7 @@ export default function IPFileDefinition() {
         }
         console.log(body)
         const headers = await axios.post("http://localhost:1827/header/addheader", body)
+        alert('Data added successfull')
         try {
             console.log(headers.data.message)
         } catch (err) {

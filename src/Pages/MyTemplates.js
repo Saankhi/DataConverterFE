@@ -31,7 +31,7 @@ export default function MyTemplates() {
 
 
     const getMappings = async () => {
-        const result = await axios.get("http://localhost:1827/header/mapping/" + key)
+        const result = await axios.get("http://localhost:1827/header/getmappings/" + key)
         try {
             setMappings(result.data.mappingData)
             setMappedHeaders(result.data.mappedHeaders)
@@ -45,15 +45,15 @@ export default function MyTemplates() {
     return (
         <>
             <div style={{ textAlign: 'right', margin: '30px', }}>
-                <button style={{ backgroundColor: '#12B5B0', width: '200px', height: '40px', borderRadius: '20px', color: "white", border: "none" }} onClick={onHandleClick}>Create New Template</button>
+                <button style={{ backgroundColor: '#12B5B0', width: '200px', height: '50px', borderRadius: '20px', color: "white", border: "none", fontSize: '18px' }} onClick={onHandleClick}>Create New Template</button>
             </div>
-            <h1 style={{ margin:'50px' }}>My Templates</h1>
+            <h2 style={{ margin: '50px' }}>My Templates</h2>
             <div className="container">
                 <Table>
                     <thead style={{ border: '2px solid black' }}>
                         <tr>
-                            <th>Input Format Type</th>
-                            <th>Output Format Type</th>
+                            <th>Input File Name</th>
+                            <th>Output File Name</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -86,7 +86,7 @@ export default function MyTemplates() {
                                                         <div><h4>Input Field</h4>
                                                             {Object.entries(mappedHeaders).map(
                                                                 (arr) => {
-                                                                    return <p>{arr[0]}</p>
+                                                                    return <div>{arr[1].join(', ')}</div>
                                                                 }
                                                             )}
                                                         </div>
@@ -94,12 +94,7 @@ export default function MyTemplates() {
                                                             <h4>Output Field</h4>
                                                             {Object.entries(mappedHeaders).map(
                                                                 (arr) => {
-                                                                    return arr[1].map((header) => {
-                                                                        if (arr[1].length !== 1) {
-                                                                            return <div style={{ display: "flex" }}><p>{header},</p></div>
-                                                                        }
-                                                                        else return <p>{header}</p>
-                                                                    })
+                                                                    return <p>{arr[0]}</p>
                                                                 }
                                                             )}
                                                         </div>

@@ -14,7 +14,7 @@ export default function ProfilePopUp(props) {
 
     useEffect(() => {
         adminDetails();
-    }, [adminInfo])
+    }, [modalShow])
 
 
 
@@ -56,11 +56,12 @@ export default function ProfilePopUp(props) {
                                         <div>
                                             <p>{prof.firstName} {prof.lastName}</p>
                                             <p>{prof.role}</p>
+                                            <p>{prof.department}</p>
                                         </div>
                                         <div style={{ marginLeft: '250px' }}>
-                                            <p>Mobile:{prof.mobile}</p>
-                                            <p>Email:{prof.email}</p>
-                                            <p>Password:{prof.password}</p>
+                                            <p>Mobile: {prof.mobile}</p>
+                                            <p>Email: {prof.email}</p>
+                                            <p>Password: {prof.password}</p>
                                         </div>
                                     </div>
                                     </>

@@ -17,6 +17,8 @@ export default function UserHome() {
     const [outputFileType, setOutputFileType] = useState(null)
     const [outputFileName, setOutputFileName] = useState(null)
     const [open, setOpen] = useState(false)
+    const [enableOp, setEnableOp] = useState(false)
+    const [enableFile, setEnableFile] = useState(false)
 
     const [inputFileHeaders, setInputFileHeaders] = useState([])
     const [outputFileHeaders, setOutputFileHeaders] = useState([])
@@ -26,6 +28,9 @@ export default function UserHome() {
     const [mappedHeaders, setMappedHeaders] = useState({})
     const [ipJSONData, setIPJSONData] = useState([])
 
+    const [opFiles, setOPFiles] = useState([])
+    const [ipFileNames, setIPFileNames] = useState([])
+
 
 
 
@@ -33,6 +38,8 @@ export default function UserHome() {
 
         const file = e.target.files[0];
         setFileName(file.name)
+
+        getOPFiles();
 
         // const len = file.name.length
         // if (inputFileType !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
@@ -77,6 +84,44 @@ export default function UserHome() {
         }
     }
 
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    const userDept = userInfo[0].department
+
+
+    // const getMappedHeaders = async () => {
+
+    //     const body = {
+    //         ipFilekey: ipFile,
+    //         departmentkey: userDept
+    //     }
+    //     const result = await axios.post("http://localhost:1827/header/getmapping", body)
+    //     try {
+    //         setMappedHeaders(result.data.mappedHeaders)
+    //         setOPFile(result.data.mappingData)
+    //     } catch (err) {
+    //         console.log("Error")
+    //     }
+    // }
+
+
+    const getOPFiles = async () => {
+
+        const body = {
+            ipFilekey: ipFile,
+            departmentkey: userDept
+        }
+
+        console.log(body)
+        const result = await axios.post("http://localhost:1827/header/getmapping", body)
+        try {
+            setOPFiles(result.data.mappingData)
+            console.log("OP File names retreived")
+            console.log(result.data.mappingData)
+        } catch (err) {
+            console.log("Error")
+        }
+    }
+
     const handelInputFileFormat = async (e) => {
 
         const key = e.target.value
@@ -85,12 +130,14 @@ export default function UserHome() {
             setIPFile(key)
             setInputFileType(result.data.headersDetails[0].fileFormat)
             setInputFileHeaders(result.data.headersDetails)
+            setEnableFile(true)
+            setEnableOp(true)
         } catch (err) {
             console.log("Error")
         }
     }
 
-    // console.log(inputFileHeaders)
+    console.log(opFiles)
 
     const handelOutputFileFormat = async (e) => {
 
@@ -109,18 +156,26 @@ export default function UserHome() {
 
     // console.log(outputFileHeaders)
 
+    // const getFileNames = async () => {
+    //     const data = await axios.get("http://localhost:1827/header/allfiles")
+    //     try {
+    //         setFileNamesData(data.data.fileTypeDetails)
+    //         // console.log(data.data.fileTypeDetails)
+    //     } catch (err) {
+    //         console.log("Error retreving data")
+    //     }
+    // }
+
+
     const getFileNames = async () => {
-        const data = await axios.get("http://localhost:1827/header/allfiles")
+        const data = await axios.get("http://localhost:1827/header/mapping/" + userDept)
         try {
-            setFileNamesData(data.data.fileTypeDetails)
-            // console.log(data.data.fileTypeDetails)
+            setIPFileNames(data.data.mappingData)
+            console.log("IP File Names retrieved")
         } catch (err) {
-            console.log("Error retreving data")
+            console.log("Error")
         }
     }
-
-
-
 
 
     // Conerting input file data to JSON ::::  filtering in this segment ::::
@@ -139,29 +194,8 @@ export default function UserHome() {
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet)
 
-
-
             console.log("ipData:", jsonData)
             setIPJSONData(jsonData)
-
-
-            // const unselectedHeaders = inputHeaders.filter((ipHeader) => {
-            //     var isPresent = false
-            //     outputFileHeaders.forEach((opHeader) => {
-            //         if (ipHeader === opHeader) {
-            //             isPresent = true
-            //         }
-            //     })
-            //     return !isPresent
-            // })
-
-            // console.log(unselectedHeaders)
-
-            // jsonData.forEach((obj) => {
-            //     unselectedHeaders.forEach((header) => {
-            //         delete (obj[header])
-            //     })
-            // })
         }
 
         else {
@@ -187,14 +221,15 @@ export default function UserHome() {
     }
 
 
-    const inputHeaders = Object.keys(ipJSONData[0])
-    console.log(inputHeaders)
+
 
     // Data conersion to opData 
 
     console.log(headerArrays)
 
     function OPJSONData() {
+
+        const inputHeaders = Object.keys(ipJSONData[0])
 
         ipJSONData.forEach((obj) => {
             headerArrays.map((arr) => {
@@ -222,6 +257,18 @@ export default function UserHome() {
 
         })
 
+
+        ipJSONData.forEach((obj) => {
+            headerArrays.map((arr) => {
+                inputHeaders.map((header) => {
+                    const isPresent = arr.includes(header)
+                    if (!isPresent) delete obj[header]
+                })
+            })
+
+        })
+
+        console.log("Opdata is running")
         console.log("opData: ", ipJSONData)
         setParsedData(ipJSONData)
     }
@@ -279,28 +326,30 @@ export default function UserHome() {
                     <div className="input-group-selector" style={{ display: "flex", justifyContent: "space-evenly" }}>
                         <Form.Select value={ipFile} onChange={(e) => handelInputFileFormat(e)} style={{ width: "11rem" }}>
                             <option>Input File Format</option>
-                            {fileNamesData.length > 0 ? (<>
-                                {fileNamesData.map((file) => {
-                                    if (file.fileType === "Input")
-                                        return <option>{file.fileName}</option>
+                            {ipFileNames.length > 0 ? (<>
+                                {ipFileNames.map((obj) => {
+                                    return <option>{obj.ipFile}</option>
                                 })}
                             </>) : null}
 
 
                         </Form.Select>
 
-                        <input type="file" accept={inputFileType} onChange={(e) => handleFile(e)} />
+                        {enableFile ? <input type="file" accept={inputFileType} onChange={(e) => handleFile(e)} /> : <input disabled type="file" accept={inputFileType} onChange={(e) => handleFile(e)} />}
 
-                        <Form.Select value={opFile} onChange={(e) => handelOutputFileFormat(e)} style={{ width: "11.5rem" }}>
+                        {enableOp && inputFile ? (
+                            <Form.Select value={opFile} onChange={(e) => handelOutputFileFormat(e)} style={{ width: "11.5rem" }}>
+                                <option>Output File Format</option>
+                                {opFiles.length > 0 ? (<>
+                                    {opFiles.map((obj) => {
+                                        return <option>{obj.opFile}</option>
+                                    })}
+                                </>) : null}
+                            </Form.Select>
+                        ) : (<Form.Select disabled style={{ width: "11.5rem" }}>
                             <option>Output File Format</option>
-                            {fileNamesData.length > 0 ? (<>
-                                {fileNamesData.map((file) => {
-                                    if (file.fileType === "Output")
-                                        return <option>{file.fileName}</option>
-                                })}
-                            </>) : null}
-
-                        </Form.Select>
+                        </Form.Select>)
+                        }
                     </div>
                 </div>
 

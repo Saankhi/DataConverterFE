@@ -16,6 +16,7 @@ export default function SignUp() {
     const [password, setPassword] = useState(null)
     const [confrimPass, setConfirmPass] = useState(null)
     const [role, setRole] = useState(null)
+    const [depart, setDepart] = useState(null)
     const navigate = useNavigate();
 
 
@@ -38,7 +39,8 @@ export default function SignUp() {
             email: email,
             mobile: mobile,
             password: password,
-            role: role
+            role: role,
+            department: depart
         }
         const result = await axios.post("http://localhost:1827/auth/signup", body)
 
@@ -95,19 +97,26 @@ export default function SignUp() {
                             <Form.Label style={{ color: "White", marginTop: "1rem", fontSize: "0.9rem" }}>Confirm Password</Form.Label>
                             <InputGroup>
                                 <Form.Control type="password" value={confrimPass} onChange={(e) => handelComparePass(e)} placeholder="Re-enter password" style={{ height: "2rem" }} />
-                                {confrimPass ? (password === confrimPass ? <TiIcons.TiTick style={{fontSize:"2rem" , color:"green"}}/> : <RiIcons.RiCloseFill style={{fontSize:"2rem" , color:"red"}} />) : null}
+                                {confrimPass ? (password === confrimPass ? <TiIcons.TiTick style={{ fontSize: "2rem", color: "green" }} /> : <RiIcons.RiCloseFill style={{ fontSize: "2rem", color: "red" }} />) : null}
                             </InputGroup>
                         </Form.Group>
                     </div>
 
-                    <Form.Group style={{ marginLeft: "4rem" }}>
-                        <Form.Label style={{ color: "White", marginTop: "1rem", fontSize: "0.9rem" }}>Choose Role</Form.Label>
-                        <Form.Select value={role} onChange={(e) => setRole(e.target.value)} style={{ width: "25rem", height: "2rem" }}>
-                            <option>Select Your Role</option>
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
-                        </Form.Select>
-                    </Form.Group>
+                    <div className="group-3" style={{ display: "flex" }}>
+                        <Form.Group style={{}}>
+                            <Form.Label style={{ color: "White", marginTop: "1rem", fontSize: "0.9rem" }}>Choose Role</Form.Label>
+                            <Form.Select value={role} onChange={(e) => setRole(e.target.value)} style={{ width: "15rem", height: "2rem" }}>
+                                <option>Select Your Role</option>
+                                <option value="Admin">Admin</option>
+                                <option value="User">User</option>
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group style={{ width: "15rem" }}>
+                            <Form.Label style={{ color: "White", marginTop: "1rem", fontSize: "0.9rem" }}>Department</Form.Label>
+                            <Form.Control type="text" value={depart} onChange={(e) => setDepart(e.target.value)} placeholder="Department" style={{ height: "2rem" }} />
+                        </Form.Group>
+                    </div>
 
                     {fName && lName && email && mobile && password && password === confrimPass && role ?
                         <Button variant="success" onClick={onSignUp} style={{ marginTop: "2rem", width: "10rem", marginLeft: "10rem", marginBottom: "2rem" }}>Sign Up</Button>
