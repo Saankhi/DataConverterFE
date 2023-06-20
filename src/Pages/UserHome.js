@@ -11,7 +11,6 @@ import axios from "axios"
 export default function UserHome() {
 
     const [inputFile, setInputFile] = useState(null)
-    const [fileName, setFileName] = useState(null)
     const [inputFileType, setInputFileType] = useState(null)
     const [parsedData, setParsedData] = useState()               // i/p data to JSON parsing
     const [outputFileType, setOutputFileType] = useState(null)
@@ -19,36 +18,24 @@ export default function UserHome() {
     const [open, setOpen] = useState(false)
     const [enableOp, setEnableOp] = useState(false)
     const [enableFile, setEnableFile] = useState(false)
-
-    const [inputFileHeaders, setInputFileHeaders] = useState([])
-    const [outputFileHeaders, setOutputFileHeaders] = useState([])
-    const [fileNamesData, setFileNamesData] = useState([])
     const [ipFile, setIPFile] = useState()
     const [opFile, setOPFile] = useState()
     const [mappedHeaders, setMappedHeaders] = useState({})
     const [ipJSONData, setIPJSONData] = useState([])
-
     const [opFiles, setOPFiles] = useState([])
     const [ipFileNames, setIPFileNames] = useState([])
 
 
 
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    const userDept = userInfo[0].department
+
 
     const handleFile = async (e) => {
 
         const file = e.target.files[0];
-        setFileName(file.name)
 
         getOPFiles();
-
-        // const len = file.name.length
-        // if (inputFileType !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
-        //     const output = file.name.substr(0, (len - 3))
-        //     setOutputFileName(output)
-        // } else {
-        //     const output = file.name.substr(0, (len - 4))
-        //     setOutputFileName(output)
-        // }
 
 
         if (inputFileType === "text/xml") {
@@ -77,32 +64,11 @@ export default function UserHome() {
         const result = await axios.post("http://localhost:1827/header/usermapping", body)
         try {
             setMappedHeaders(result.data.mappedHeaders)
-            console.log(result.data.mappedHeaders)
         } catch (err) {
             console.log("Error retreving data")
             console.log(err)
         }
     }
-
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-    const userDept = userInfo[0].department
-
-
-    // const getMappedHeaders = async () => {
-
-    //     const body = {
-    //         ipFilekey: ipFile,
-    //         departmentkey: userDept
-    //     }
-    //     const result = await axios.post("http://localhost:1827/header/getmapping", body)
-    //     try {
-    //         setMappedHeaders(result.data.mappedHeaders)
-    //         setOPFile(result.data.mappingData)
-    //     } catch (err) {
-    //         console.log("Error")
-    //     }
-    // }
-
 
     const getOPFiles = async () => {
 
@@ -115,8 +81,6 @@ export default function UserHome() {
         const result = await axios.post("http://localhost:1827/header/getmapping", body)
         try {
             setOPFiles(result.data.mappingData)
-            console.log("OP File names retreived")
-            console.log(result.data.mappingData)
         } catch (err) {
             console.log("Error")
         }
@@ -129,7 +93,6 @@ export default function UserHome() {
         try {
             setIPFile(key)
             setInputFileType(result.data.headersDetails[0].fileFormat)
-            setInputFileHeaders(result.data.headersDetails)
             setEnableFile(true)
             setEnableOp(true)
         } catch (err) {
@@ -137,7 +100,6 @@ export default function UserHome() {
         }
     }
 
-    console.log(opFiles)
 
     const handelOutputFileFormat = async (e) => {
 
@@ -147,31 +109,17 @@ export default function UserHome() {
             setOPFile(key)
             setOutputFileName(result.data.headersDetails[0].fileName)
             setOutputFileType(result.data.headersDetails[0].fileFormat)
-            setOutputFileHeaders(result.data.headersDetails)
 
         } catch (err) {
             console.log("Error")
         }
     }
 
-    // console.log(outputFileHeaders)
-
-    // const getFileNames = async () => {
-    //     const data = await axios.get("http://localhost:1827/header/allfiles")
-    //     try {
-    //         setFileNamesData(data.data.fileTypeDetails)
-    //         // console.log(data.data.fileTypeDetails)
-    //     } catch (err) {
-    //         console.log("Error retreving data")
-    //     }
-    // }
-
 
     const getFileNames = async () => {
         const data = await axios.get("http://localhost:1827/header/mapping/" + userDept)
         try {
             setIPFileNames(data.data.mappingData)
-            console.log("IP File Names retrieved")
         } catch (err) {
             console.log("Error")
         }
@@ -180,7 +128,6 @@ export default function UserHome() {
 
     // Conerting input file data to JSON ::::  filtering in this segment ::::
 
-    console.log(mappedHeaders)
     const headerArrays = Object.values(mappedHeaders)
 
     async function convertData() {
@@ -194,7 +141,6 @@ export default function UserHome() {
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet)
 
-            console.log("ipData:", jsonData)
             setIPJSONData(jsonData)
         }
 
@@ -221,11 +167,7 @@ export default function UserHome() {
     }
 
 
-
-
     // Data conersion to opData 
-
-    console.log(headerArrays)
 
     function OPJSONData() {
 
@@ -268,8 +210,6 @@ export default function UserHome() {
 
         })
 
-        console.log("Opdata is running")
-        console.log("opData: ", ipJSONData)
         setParsedData(ipJSONData)
     }
 
@@ -317,7 +257,6 @@ export default function UserHome() {
 
     return (
         <>
-            {/* <HeaderUser /> */}
             <div className="body" style={{ padding: "1rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "calc(100vh - 56px)" }}>
 
                 <div className="input-group" style={{ display: "flex", flexDirection: "column" }}>
@@ -354,36 +293,11 @@ export default function UserHome() {
                 </div>
 
                 <br /> <br />
-
-
-
                 <br /><br />
 
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
 
-                    {/* <h4 className="p-2">Your desired output file format</h4> */}
-                    {/* <Form.Select onChange={(e) => setOutputFileType(e.target.value)} style={{ width: "11rem" }}>
-                        <option>Output File Type</option>
-                        <option value="csv">CSV</option>
-                        <option value="xml">XML</option>
-                        <option value="xlsx">XLSX</option>
-                    </Form.Select> */}
                 </div><br />
-
-                {/* {parsedData ?
-                    <p>
-                        Your desired {mapping} mapping will have the following headers in your output file :
-                        <Container>
-                            <Row>
-                                {finalHeaders.map((header) => {
-                                    return (
-                                        <Col><b>{header}</b></Col>
-                                    )
-                                })}
-                            </Row>
-                        </Container> <br />
-                        Your file has been converted to {outputFileType} file. Please download it.
-                    </p> : null} */}
 
                 {parsedData ?
                     <Button variant="outline-success" onClick={extractParsedData}>Download File</Button> :
