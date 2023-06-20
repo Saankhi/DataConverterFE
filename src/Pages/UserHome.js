@@ -139,6 +139,8 @@ export default function UserHome() {
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet)
 
+
+
             console.log("ipData:", jsonData)
             setIPJSONData(jsonData)
 
@@ -185,8 +187,12 @@ export default function UserHome() {
     }
 
 
+    const inputHeaders = Object.keys(ipJSONData[0])
+    console.log(inputHeaders)
+
     // Data conersion to opData 
 
+    console.log(headerArrays)
 
     function OPJSONData() {
 
@@ -203,6 +209,7 @@ export default function UserHome() {
                         }
                         delete obj[arr[i]]
                     }
+
                 } else {
                     const header = arr[0]
                     const newHeader = Object.keys(mappedHeaders).find(key =>

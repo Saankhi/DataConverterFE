@@ -1,9 +1,15 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import Templetepopup from "../Components/Templetepopup";
 import { Modal } from "react-bootstrap";
+
+
+
+
+
 
 const dummydata = [
     {
@@ -24,12 +30,35 @@ const dummydata = [
 export default function MyTemplates() {
 
     const [lgShow, setLgShow] = useState(false);
-
+    const [mappings, setMappings] = useState([]);
+    const [mappedHeaders, setMappedHeaders] = useState({})
     const navigate = useNavigate();
 
     const onHandleClick = () => {
         navigate("/template")
     }
+
+    useEffect(() => {
+        getMappings();
+    }, [])
+
+
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    const key = userInfo[0].department
+
+
+    const getMappings = async () => {
+        const result = await axios.get("http://localhost:1827/header/mapping/" + key)
+        try {
+            setMappings(result.data.mappingData)
+            setMappedHeaders(result.data.mappedHeaders)
+            // console.log("Records Retrieved")
+        } catch (err) {
+            console.log("Error with this call")
+        }
+    }
+
+
     return (
         <>
             <div style={{ textAlign: 'right', margin: '30px', }}>
@@ -47,12 +76,12 @@ export default function MyTemplates() {
                     </thead>
                     <tbody>
 
-                        {dummydata.map((data) => {
+                        {mappings.map((mapping) => {
                             return (
                                 <>
-                                    <tr style={{margin:'20px'}}>
-                                        <td>{data.input}</td>
-                                        <td>{data.output}</td>
+                                    <tr style={{ margin: '20px' }}>
+                                        <td>{mapping.ipFile}</td>
+                                        <td>{mapping.opFile}</td>
                                         <td>
                                             <Button
                                                 onClick={() => setLgShow(true)}
@@ -70,25 +99,26 @@ export default function MyTemplates() {
                                                 <Modal.Header closeButton>
                                                 </Modal.Header>
                                                 <Modal.Body>
-                                                    <div style={{display:'flex',justifyContent:'space-evenly'}}>
-                                                        <div><h4>Inputfield</h4>
-                                                            <p>SurName</p>
-                                                            <p>FirstName</p>
-                                                            <p>Gender</p>
-                                                            <p>AccountNo</p>
-                                                            <p>Branch</p>
-                                                            <p>currency</p>
-                                                            <p>AccountType</p>
-                                                            <p>AccountBalance</p>
-                                                            <p>IFSC Code</p>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                                                        <div><h4>Input Field</h4>
+                                                            {Object.entries(mappedHeaders).map(
+                                                                (arr) => {
+                                                                    return <p>{arr[0]}</p>
+                                                                }
+                                                            )}
                                                         </div>
                                                         <div>
                                                             <h4>Output Field</h4>
-                                                            <p>SurName</p>
-                                                            <p>FirstName</p>
-                                                            <p>Gender</p>
-                                                            <p>AccountNo</p>
-                                                            <p>Branch</p>
+                                                            {Object.entries(mappedHeaders).map(
+                                                                (arr) => {
+                                                                    return arr[1].map((header) => {
+                                                                        if (arr[1].length !== 1) {
+                                                                            return <div style={{ display: "flex" }}><p>{header},</p></div>
+                                                                        }
+                                                                        else return <p>{header}</p>
+                                                                    })
+                                                                }
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </Modal.Body>

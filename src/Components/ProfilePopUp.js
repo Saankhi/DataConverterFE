@@ -13,7 +13,7 @@ export default function ProfilePopUp(props) {
 
 
     useEffect(() => {
-        // adminDetails();
+        adminDetails();
     }, [adminInfo])
 
 

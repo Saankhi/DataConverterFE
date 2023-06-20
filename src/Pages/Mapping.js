@@ -35,6 +35,7 @@ export default function Mapping() {
     const [showIP, setShowIp] = useState(false)
     const [selectedOptions, setSelectedOptions] = useState({})
     const [opSelect, setOPSelect] = useState({})
+    const navigate = useNavigate();
 
 
     const handleChangeOP = (idx, e) => {
@@ -104,12 +105,14 @@ export default function Mapping() {
         const body = {
             ipFile: ipFile,
             opFile: opFile,
-            mappedHeaders: obj
+            mappedHeaders: obj,
+            department: key
         }
         console.log(body)
         const headers = await axios.post("http://localhost:1827/header/addmapping", body)
         try {
             console.log(headers.data.message)
+            navigate('/mytemplates')
 
         } catch (err) {
             console.log(err)
@@ -205,7 +208,7 @@ export default function Mapping() {
                                     </li><hr /></>
                                 )
                             })}
-                            <Button onClick={onSave} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem" }}>Save</Button>
+                            <Button onClick={onSave} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem",marginLeft:'150px' }} >Save</Button>
 
                         </div>) : null}
                     </div>

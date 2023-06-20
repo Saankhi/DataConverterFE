@@ -34,3 +34,9 @@ body{
   display: flex;
   height: 500px;
 }
+td{
+  text-align: center;
+}
+thead{
+  text-align: center;
+}
