@@ -64,7 +64,7 @@ export default function MyTemplates() {
             <div style={{ textAlign: 'right', margin: '30px', }}>
                 <button style={{ backgroundColor: '#12B5B0', width: '200px', height: '40px', borderRadius: '20px', color: "white", border: "none" }} onClick={onHandleClick}>Create New Template</button>
             </div>
-            <h1 style={{ marginLeft: '30px' }}>My Templates</h1>
+            <h1 style={{ margin:'50px' }}>My Templates</h1>
             <div className="container">
                 <Table>
                     <thead style={{ border: '2px solid black' }}>
