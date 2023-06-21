@@ -54,10 +54,10 @@ export default function Login() {
                             <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" style={{ height: "3rem" }} />
                         </Form.Group>
 
-                        <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "2rem" }}>
+                        {/* <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "2rem" }}>
                             <Form.Check label="Remember Me" />
                             <Link>Forgot Password?</Link>
-                        </div>
+                        </div> */}
 
                         {email && password ?
                             <Button variant="success" onClick={onLogin} style={{ width: "10rem", marginBottom: "0.5rem", marginLeft: "4rem" }}>Login</Button>

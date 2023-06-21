@@ -112,9 +112,11 @@ export default function Mapping() {
         const headers = await axios.post("http://localhost:1827/header/addmapping", body)
         try {
             console.log(headers.data.message)
+            alert('Your Mapping has been saved successfully')
             navigate('/mytemplates')
 
         } catch (err) {
+            alert('Mapping Failed')
             console.log(err)
         }
     }

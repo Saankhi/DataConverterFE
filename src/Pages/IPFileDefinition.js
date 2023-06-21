@@ -1,9 +1,10 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import axios from "axios"
 import Header from "../Components/Header"
 import { Form, FormLabel, FormControl, Button, Table, InputGroup } from "react-bootstrap"
 import * as MdIcons from "react-icons/md"
 import { useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
 
 export default function IPFileDefinition() {
 
@@ -20,6 +21,11 @@ export default function IPFileDefinition() {
 
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     const userDept = userInfo[0].department
+
+
+    useEffect(() => {
+
+    }, [headersCount])
 
     const addHeader = () => {
         setIsClicked(true)
@@ -48,6 +54,7 @@ export default function IPFileDefinition() {
     }
 
 
+    console.log(headersObj)
 
 
     const onAdd = async () => {
@@ -60,13 +67,44 @@ export default function IPFileDefinition() {
         }
         console.log(body)
         const headers = await axios.post("http://localhost:1827/header/addheader", body)
-        alert('Data added successfull')
         try {
-            console.log(headers.data.message)
+            alert('Data added successfull')
+
         } catch (err) {
-            console.log(err)
+            alert('Failed adding data')
         }
     }
+
+    const deleteHeader = (i) => {
+        setHeadersCount(headersCount - 1)
+        delete headersObj[i]
+    }
+
+
+
+    const onDelete = (i) => {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+                deleteHeader(i);
+            }
+        })
+
+    }
+
 
     return (
         <>
@@ -135,7 +173,7 @@ export default function IPFileDefinition() {
                                 return (
                                     <tr>
                                         <th>Header {index + 1}</th>
-                                        <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red" }} /></InputGroup></th>
+                                        <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete onClick={() => onDelete(index + 1)} style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red", fontSize: "1.3rem" }} /></InputGroup></th>
                                     </tr>
                                 )
                             })) : null}

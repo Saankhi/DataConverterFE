@@ -4,6 +4,7 @@ import Header from "../Components/Header"
 import { Form, FormLabel, FormControl, Button, Table, InputGroup } from "react-bootstrap"
 import * as MdIcons from "react-icons/md"
 import { useNavigate } from "react-router-dom"
+import Swal from "sweetalert2"
 
 export default function OPFileDefinition() {
 
@@ -45,9 +46,6 @@ export default function OPFileDefinition() {
         setHeadersObj({ ...headersObj, [key]: { "headerValue": e.target.value } })
     }
 
-    // const getHeaderObjValue = (key) => {
-    //     return headersObj[key]
-    // }
 
 
 
@@ -63,12 +61,45 @@ export default function OPFileDefinition() {
         console.log(body)
         const headers = await axios.post("http://localhost:1827/header/addheader", body)
         try {
+            alert('Data added successfull')
             console.log(headers.data.message)
             navigate('/mapping')
         } catch (err) {
+            alert('Failed adding data')
             console.log(err)
         }
     }
+
+    const deleteHeader = (i) => {
+        setHeadersCount(headersCount - 1)
+        delete headersObj[i]
+    }
+
+
+
+    const onDelete = (i) => {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+                deleteHeader(i);
+            }
+        })
+
+    }
+
 
     return (
         <>
@@ -136,7 +167,7 @@ export default function OPFileDefinition() {
                                 return (
                                     <tr>
                                         <th>Header {index + 1}</th>
-                                        <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red" }} /></InputGroup></th>
+                                        <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete onClick={() => onDelete(index + 1)} style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red", fontSize: "1.3rem" }} /></InputGroup></th>
                                     </tr>
                                 )
                             })) : null}

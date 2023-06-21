@@ -133,7 +133,7 @@ export default function ProfilePopUp(props) {
                         adminInfo={adminInfo}
                     />
                     </div>
-                    <div style={{fontSize:'40px'}}>
+                    <div style={{fontSize:'30px'}}>
                     <AiIcons.AiOutlinePoweroff onClick={logOut} />
                     </div>
                     </div>
