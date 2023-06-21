@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
 import EditProfilePopUp from "./EditProfilePopUp";
+import * as AiIcons from "react-icons/ai"
 
 export default function ProfilePopUp(props) {
     const navigate = useNavigate();
@@ -30,6 +31,12 @@ export default function ProfilePopUp(props) {
             console.log("Error retreiving the details")
         }
 
+    }
+
+
+    const logOut = () => {
+        localStorage.clear();
+        navigate('/')
     }
 
 
@@ -83,7 +90,7 @@ export default function ProfilePopUp(props) {
                         adminInfo={adminInfo}
                     />
                 </Modal.Body>
-
+                <AiIcons.AiOutlinePoweroff onClick={logOut} />
             </Modal>
         </>
 

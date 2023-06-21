@@ -3,10 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
-import Templetepopup from "../Components/Templetepopup";
 import { Modal } from "react-bootstrap";
-
-
 
 
 
@@ -50,7 +47,7 @@ export default function MyTemplates() {
             <h2 style={{ margin: '50px' }}>My Templates</h2>
             <div className="container">
                 <Table>
-                    <thead style={{ border: '2px solid black' }}>
+                    <thead style={{ border: '1px solid black' }}>
                         <tr>
                             <th>Input File Name</th>
                             <th>Output File Name</th>
@@ -69,7 +66,7 @@ export default function MyTemplates() {
                                             <Button
                                                 onClick={() => setLgShow(true)}
                                                 variant="light"
-                                                style={{ backgroundColor: 'grey', color: 'black' }}
+                                                style={{ backgroundColor: '#D9D9D9', color: 'black' }}
                                             >
                                                 View Format
                                             </Button>
