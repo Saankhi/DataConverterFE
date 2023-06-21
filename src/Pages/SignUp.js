@@ -56,7 +56,7 @@ export default function SignUp() {
 
     return (
         <>
-            <div className="signup" style={{ height: "100%" }}>
+            <div className="signup">
 
                 <p style={{ textAlign: "end", color: "White", marginRight: "2rem", paddingTop: "2rem" }}>Already have an account?<Link to="/" style={{ color: "#12B5B0" }}>Sign in here</Link></p>
 
@@ -103,9 +103,9 @@ export default function SignUp() {
                     </div>
 
                     <div className="group-3" style={{ display: "flex" }}>
-                        <Form.Group style={{}}>
+                        <Form.Group style={{width: "15rem",marginRight: "2rem"}}>
                             <Form.Label style={{ color: "White", marginTop: "1rem", fontSize: "0.9rem" }}>Choose Role</Form.Label>
-                            <Form.Select value={role} onChange={(e) => setRole(e.target.value)} style={{ width: "15rem", height: "2rem" }}>
+                            <Form.Select value={role} onChange={(e) => setRole(e.target.value)} style={{  height: "2rem" }}>
                                 <option>Select Your Role</option>
                                 <option value="Admin">Admin</option>
                                 <option value="User">User</option>
@@ -118,7 +118,7 @@ export default function SignUp() {
                         </Form.Group>
                     </div>
 
-                    {fName && lName && email && mobile && password && password === confrimPass && role ?
+                    {fName && lName && email && mobile && password && password === confrimPass && role && depart ?
                         <Button variant="success" onClick={onSignUp} style={{ marginTop: "2rem", width: "10rem", marginLeft: "10rem", marginBottom: "2rem" }}>Sign Up</Button>
                         : <Button variant="success" disabled style={{ marginTop: "2rem", width: "10rem", marginLeft: "10rem", marginBottom: "2rem" }}>Sign Up</Button>}
 
