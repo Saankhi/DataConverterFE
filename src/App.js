@@ -39,7 +39,7 @@ function AppContent() {
       {isLoggedInKey ? role[0].role === "Admin" ? <Header /> : <HeaderUser /> : null}
       <Routes>
         <Route path="/" element={<PrivateRoute Component={isLoggedInKey ? role[0].role === "Admin" ? AdminHome : UserHome : Login} />} />
-        <Route path="/signup" element={<PrivateRoute Component={SignUp} />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/userhome" element={<PrivateRoute Component={UserHome} />} />
         <Route path="/adminhome" element={<PrivateRoute Component={AdminHome} />} />
         <Route path="/mytemplates" element={<PrivateRoute Component={MyTemplates} />} />
