@@ -41,18 +41,20 @@ export default function MyTemplates() {
 
     return (
         <>
-            <div style={{ textAlign: 'right', margin: '30px', }}>
+            <div style={{float:'right',margin:'20px 20px' }}>
                 <button style={{ backgroundColor: '#12B5B0', width: '200px', height: '50px', borderRadius: '20px', color: "white", border: "none", fontSize: '18px' }} onClick={onHandleClick}>Create New Template</button>
             </div>
             <h2 style={{ margin: '50px' }}>My Templates</h2>
             <div className="container">
                 <Table>
-                    <thead style={{ border: '1px solid black' }}>
+                    <thead style={{ border: '1px solid black', borderRadius:'10px' }}>
+                   
                         <tr>
-                            <th>Input File Name</th>
-                            <th>Output File Name</th>
-                            <th></th>
+                            <th style={{color:'#12B5B0'}}>Input File Name</th>
+                            <th style={{color:'#12B5B0'}}>Output File Name</th>
+                            <th style={{color:'#12B5B0'}}>Mapping</th>
                         </tr>
+                       
                     </thead>
                     <tbody>
 
@@ -66,7 +68,7 @@ export default function MyTemplates() {
                                             <Button
                                                 onClick={() => setLgShow(true)}
                                                 variant="light"
-                                                style={{ backgroundColor: '#D9D9D9', color: 'black' }}
+                                                style={{ backgroundColor: '#12B5B0', color: 'white' }}
                                             >
                                                 View Format
                                             </Button>

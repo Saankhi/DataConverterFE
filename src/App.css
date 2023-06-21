@@ -11,7 +11,7 @@ body{
 }
 
 .mbody {
-  background: linear-gradient(to bottom, skyblue 40%, white 40%);
+  font-size: x-large;
 }
 
 .life li {
@@ -34,11 +34,12 @@ body{
 }
 .ebody{
   display: flex;
-  height: 500px;
+  font-size: x-large;
 }
 td{
   text-align: center;
 }
 thead{
   text-align: center;
+  font-size: larger;
 }

@@ -127,9 +127,10 @@ export default function Mapping() {
                 <a href="" style={{ marginTop: '20px' }}>Load Saved Mapping</a></div>
             <div style={{ justifyContent: 'space-between', display: 'flex', backgroundColor: 'black', color: '#fff', height: "3rem" }}>
                 <div style={{ display: 'flex', marginLeft: '40px' }}>
+                
                     {fileNamesData.length > 0 ? (<>
                         <Form.Select style={{ backgroundColor: "black", color: "white", border: "none", marginLeft: "8rem" }} value={opFile} onChange={(e) => (setOPFile(e.target.value), getHeaders(e.target.value), setShowOp(true))}>
-                            <option>Output Format Type</option>
+                            <option>Output File</option>
                             {fileNamesData.map((file) => {
                                 if (file.fileType === "Output")
                                     return <option>{file.fileName}</option>
@@ -137,7 +138,8 @@ export default function Mapping() {
                             })}
 
                         </Form.Select>
-                        {/* <span><h6 style={{textAlign:"center", marginTop:"1rem"}}>Output</h6></span> */}
+                        {opFile ? <span><h6 style={{ textAlign: "center", marginTop: "1rem" }}>(Output)</h6></span> : null}
+
                     </>) : (<Form.Select>
                         <option>Output Format Type</option>
                     </Form.Select>)}
@@ -145,9 +147,10 @@ export default function Mapping() {
                 </div>
 
                 <div style={{ display: 'flex', marginRight: '40px' }}>
+                    {ipFile ? <span><h6 style={{ textAlign: "center", marginTop: "1rem" }}>(Input)</h6></span> : null}
                     {fileNamesData.length > 0 ? (
                         <Form.Select style={{ backgroundColor: "black", color: "white", border: "none", marginRight: "4rem" }} value={ipFile} onChange={(e) => (setIPFile(e.target.value), getHeaders(e.target.value), setShowIp(true))}>
-                            <option>Input Format Type</option>
+                            <option>Input File</option>
                             {fileNamesData.map((file) => {
                                 if (file.fileType === "Input")
                                     return <option>{file.fileName}</option>
@@ -208,7 +211,7 @@ export default function Mapping() {
                                     </li><hr /></>
                                 )
                             })}
-                            <Button onClick={onSave} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem",marginLeft:'150px' }} >Save</Button>
+                            <Button onClick={onSave} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem", marginLeft: '150px' }} >Save</Button>
 
                         </div>) : null}
                     </div>

@@ -91,23 +91,24 @@ export default function ProfilePopUp(props) {
                 className="modal"
             >
                 <Modal.Header closeButton style={{ backgroundColor: 'skyblue' }}>
+                    <h3>Profile</h3>
                 </Modal.Header>
                 <Modal.Body className="mbody">
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }} >
                         <div style={{ display: 'flex', flexDirection: "column", marginLeft: '0px' }}>
-                            <img src="https://d38b044pevnwc9.cloudfront.net/cutout-nuxt/enhancer/2.jpg" width='200px' height='200px' style={{ borderRadius: '100px', marginTop: '50px', marginBottom: '30px' }} />
+                            {/* <img src="https://d38b044pevnwc9.cloudfront.net/cutout-nuxt/enhancer/2.jpg" width='200px' height='200px' style={{ borderRadius: '100px', marginTop: '50px', marginBottom: '30px' }} /> */}
                             {adminInfo.map((prof) => {
                                 return (
                                     <><div style={{ display: 'flex' }}>
                                         <div>
-                                            <p>{prof.firstName} {prof.lastName}</p>
-                                            <p>{prof.role}</p>
-                                            <p>{prof.department}</p>
+                                            <p><b>Name:</b> {prof.firstName} {prof.lastName}</p>
+                                            <p><b>Role:</b> {prof.role}</p>
+                                            <p><b>Department:</b> {prof.department}</p>
                                         </div>
-                                        <div style={{ marginLeft: '250px' }}>
-                                            <p>Mobile: {prof.mobile}</p>
-                                            <p>Email: {prof.email}</p>
-                                            <p>Password: {prof.password}</p>
+                                        <div style={{ marginLeft: '100px' }}>
+                                            <p><b>Mobile:</b> {prof.mobile}</p>
+                                            <p><b>Email:</b> {prof.email}</p>
+                                            <p><b>Password:</b> {prof.password}</p>
                                         </div>
                                     </div>
                                     </>
@@ -117,8 +118,11 @@ export default function ProfilePopUp(props) {
                         </div>
 
                     </div>
+                    <div style={{justifyContent:'space-between', display:'flex'}}>
+                    
+                    <div>
                     <Button variant="primary"
-                        style={{ marginLeft: '350px', width: '200px', borderRadius: '10px', backgroundColor: '#12B5B0', marginBottom: '30px' }}
+                        style={{ marginLeft: '300px', width: '140px', borderRadius: '10px', backgroundColor: '#12B5B0', }}
                         onClick={() => { setModalShow(true) }}>
 
                         Edit Profile
@@ -128,8 +132,14 @@ export default function ProfilePopUp(props) {
                         onHide={() => setModalShow(false)}
                         adminInfo={adminInfo}
                     />
+                    </div>
+                    <div style={{fontSize:'40px'}}>
+                    <AiIcons.AiOutlinePoweroff onClick={logOut} />
+                    </div>
+                    </div>
+                    
                 </Modal.Body>
-                <AiIcons.AiOutlinePoweroff onClick={logOut} />
+                
             </Modal>
         </>
 

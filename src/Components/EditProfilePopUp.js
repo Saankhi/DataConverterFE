@@ -46,34 +46,43 @@ export default function EditProfilePopUp(props) {
                 aria-labelledby="contained-modal-title-vcenter"
                 centered>
                 <Modal.Header closeButton style={{ backgroundColor: 'skyblue' }}>
-
+                 <h3>Edit Profile</h3>
                 </Modal.Header>
                 <Modal.Body className="ebody">
-                    <div>
+                    {/* <div>
                         <img src="https://d38b044pevnwc9.cloudfront.net/cutout-nuxt/enhancer/2.jpg" width='200px' height='200px' style={{ borderRadius: '100px', marginTop: '100px', marginRight: '80px', marginLeft: '30px' }} />
-                    </div>
+                    </div> */}
 
                     <div style={{ display: 'flex', marginLeft: '80px', }}>
                         <Form>
-                            <Form.Group >
-                                <Form.Label>First Name</Form.Label>
-                                <Form.Control type="text" value={firstname} onChange={(e) => setfirstname(e.target.value)} />
-                            </Form.Group>
-                            <Form.Group >
-                                <Form.Label>Last Name</Form.Label>
-                                <Form.Control type="text" value={lastname} onChange={(e) => setlastname(e.target.value)} />
-                            </Form.Group>
+                            <div style={{display:'flex',}}> 
+                                <div style={{marginRight:'6rem', marginLeft:'2rem'}}>
+                                    <Form.Group >
+                                        <Form.Label>First Name</Form.Label>
+                                        <Form.Control type="text" value={firstname} onChange={(e) => setfirstname(e.target.value)} />
+                                    </Form.Group>
+                                    <Form.Group >
+                                        <Form.Label>Last Name</Form.Label>
+                                        <Form.Control type="text" value={lastname} onChange={(e) => setlastname(e.target.value)} />
+                                    </Form.Group>
+                                </div>
+                                <div>
+                                    <Form.Group >
+                                        <Form.Label>Mobile</Form.Label>
+                                        <Form.Control type="text" value={mobile} onChange={(e) => setMobile(e.target.value)} />
+                                    </Form.Group>
 
-                            <Form.Group >
-                                <Form.Label>Mobile</Form.Label>
-                                <Form.Control type="text" value={mobile} onChange={(e) => setMobile(e.target.value)} />
-                            </Form.Group>
+                                    <Form.Group >
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control type="text" value={password} onChange={(e) => setpassword(e.target.value)} />
+                                    </Form.Group>
+                                </div>
+                            </div>
 
-                            <Form.Group >
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control type="text" value={password} onChange={(e) => setpassword(e.target.value)} />
-                            </Form.Group><br />
+                            <br />
+                            <div style={{textAlign:'center'}}>      
                             <Button onClick={updateProfile} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: '150px' }}>Update</Button>
+                            </div>
                         </Form>
 
 
