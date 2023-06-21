@@ -22,6 +22,7 @@
     "react-select": "^5.7.3",
     "react-xml-parser": "^1.1.8",
     "safe-buffer": "^5.2.1",
+    "sweetalert2": "^11.7.12",
     "timers-browserify": "^2.0.12",
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"

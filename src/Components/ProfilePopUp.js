@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
 import EditProfilePopUp from "./EditProfilePopUp";
 import * as AiIcons from "react-icons/ai"
+import Swal from "sweetalert2";
 
 export default function ProfilePopUp(props) {
     const navigate = useNavigate();
@@ -34,10 +35,48 @@ export default function ProfilePopUp(props) {
     }
 
 
-    const logOut = () => {
+    const handleLogout = () => {
         localStorage.clear();
         navigate('/')
     }
+    const logOut = () => {
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+          },
+          buttonsStyling: false
+        })
+      
+        swalWithBootstrapButtons.fire({
+          title: 'Logging out',
+            text: 'Are you sure to log out ?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Logout',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            swalWithBootstrapButtons.fire(
+              'Logged out!',
+              'You have successfully loggedout.',
+              'success'
+            )
+            handleLogout()
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            swalWithBootstrapButtons.fire(
+              'Cancelled',
+                'Your logout is failed',
+                'error'
+            )
+          }
+        })
+      }
+    
 
 
 
