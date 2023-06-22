@@ -7,29 +7,55 @@ import axios from "axios"
 export default function Login() {
 
     const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null)
+    const [password, setPassword] = useState(null);
+    const [emailError, setemailError] = useState("");
+    const [passwordError, setpasswordError] = useState("")
     const navigate = useNavigate();
 
-    const onLogin = async () => {
-
-        const body = {
-            email: email,
-            password: password
+    const onLogin = async (e) => {
+        e.preventDefault();
+        if (password === '') {
+            setpasswordError('Password is required');
+        } else {
+            setpasswordError('');
         }
-        const isPresent = await axios.post("http://localhost:1827/auth/signin", body)
-        try {
-            console.log(isPresent.data.details)
-            if (isPresent?.data?.details[0]?.role !== "Admin") {
-                localStorage.setItem('isLoggedIn' , true)
-                localStorage.setItem('userInfo', JSON.stringify(isPresent.data.details))
-                navigate('/userhome')
-            } else {
-                localStorage.setItem('isLoggedIn' , true)
-                navigate('/adminhome')
-                localStorage.setItem('userInfo', JSON.stringify(isPresent.data.details))
+
+        if (email === '') {
+            setemailError('Email is required');
+        } else {
+            setemailError('');
+        }
+
+        if (password !== '' && email !== '') {
+            const body = {
+                email: email,
+                password: password
             }
-        } catch (err) {
-            console.log(err)
+
+            const result = await axios.post("http://localhost:1827/auth/signin", body)
+            try {
+                console.log(result.data.details)
+                console.log(result.status)
+                if (result.status === 201) {
+                    if (result.data.details[0]?.role !== "Admin") {
+                        localStorage.setItem('isLoggedIn', true)
+                        localStorage.setItem('userInfo', JSON.stringify(result.data.details))
+                        navigate('/userhome')
+                    } else {
+                        localStorage.setItem('isLoggedIn', true)
+                        navigate('/adminhome')
+                        localStorage.setItem('userInfo', JSON.stringify(result.data.details))
+                    }
+                } else {
+                    alert(result.data.message)
+                }
+            } catch (err) {
+                alert("Login failed")
+                console.log(err)
+            }
+
+
+
         }
     }
 
@@ -48,12 +74,13 @@ export default function Login() {
                             <Form.Label style={{ marginTop: "0.5rem", marginRight: "2.2rem" }}>Email</Form.Label>
                             <Form.Control type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" style={{ height: "3rem" }} />
                         </Form.Group>
+                        {emailError && <p className="error" style={{ color: 'red' }}>{emailError}</p>}
 
                         <Form.Group style={{ display: "flex", width: "20rem", marginBottom: "2rem" }}>
                             <Form.Label style={{ marginTop: "0.5rem", marginRight: "0.5rem" }}>Password</Form.Label>
                             <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" style={{ height: "3rem" }} />
                         </Form.Group>
-
+                        {passwordError && <p className="error" style={{ color: 'red' }}>{passwordError}</p>}
                         {/* <div style={{ display: "flex", justifyContent: "space-around", marginBottom: "2rem" }}>
                             <Form.Check label="Remember Me" />
                             <Link>Forgot Password?</Link>

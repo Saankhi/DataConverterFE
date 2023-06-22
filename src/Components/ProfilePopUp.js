@@ -54,6 +54,7 @@ export default function ProfilePopUp(props) {
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes, Logout',
+            
             cancelButtonText: 'No, cancel!',
             reverseButtons: true
         }).then((result) => {

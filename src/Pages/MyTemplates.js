@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import { Modal } from "react-bootstrap";
+import * as GoIcons from "react-icons/go"
 
 
 
@@ -31,30 +32,31 @@ export default function MyTemplates() {
         const result = await axios.get("http://localhost:1827/header/getmappings/" + key)
         try {
             setMappings(result.data.mappingData)
-            setMappedHeaders(result.data.mappedHeaders)
+            // setMappedHeaders(result.data.mappingData.mappedHeaders)
             // console.log("Records Retrieved")
         } catch (err) {
             console.log("Error with this call")
         }
     }
 
+    console.log(mappings)
 
     return (
         <>
-            <div style={{float:'right',margin:'20px 20px' }}>
+            <div style={{ float: 'right', margin: '20px 20px' }}>
                 <button style={{ backgroundColor: '#12B5B0', width: '200px', height: '50px', borderRadius: '20px', color: "white", border: "none", fontSize: '18px' }} onClick={onHandleClick}>Create New Template</button>
             </div>
             <h2 style={{ margin: '50px' }}>My Templates</h2>
             <div className="container">
                 <Table>
-                    <thead style={{ border: '1px solid black', borderRadius:'10px' }}>
-                   
+                    <thead style={{ border: '1px solid black', borderRadius: '10px' }}>
+
                         <tr>
-                            <th style={{color:'#12B5B0'}}>Input File Name</th>
-                            <th style={{color:'#12B5B0'}}>Output File Name</th>
-                            <th style={{color:'#12B5B0'}}>Mapping</th>
+                            <th style={{ color: '#12B5B0' }}>Input File Name</th>
+                            <th style={{ color: '#12B5B0' }}>Output File Name</th>
+                            <th style={{ color: '#12B5B0' }}>Mapping</th>
                         </tr>
-                       
+
                     </thead>
                     <tbody>
 
@@ -83,19 +85,25 @@ export default function MyTemplates() {
                                                 <Modal.Body>
                                                     <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
                                                         <div><h4>Input Field</h4>
-                                                            {Object.entries(mappedHeaders).map(
-                                                                (arr) => {
-                                                                    return <div>{arr[1].join(', ')}</div>
-                                                                }
-                                                            )}
+                                                            {
+                                                                Object.entries(mapping.mappedHeaders).map(
+                                                                    (arr) => {
+                                                                        return <div>{arr[1].join(', ')}<GoIcons.GoArrowRight /></div>
+                                                                    }
+                                                                )
+                                                            }
                                                         </div>
                                                         <div>
                                                             <h4>Output Field</h4>
-                                                            {Object.entries(mappedHeaders).map(
-                                                                (arr) => {
-                                                                    return <p>{arr[0]}</p>
-                                                                }
-                                                            )}
+                                                            {
+                                                                Object.entries(mapping.mappedHeaders).map(
+                                                                    (arr) => {
+                                                                        return <p>{arr[0]}</p>
+                                                                    }
+                                                                )
+                                                            }
+
+
                                                         </div>
                                                     </div>
                                                 </Modal.Body>

@@ -24,7 +24,7 @@ export default function IPFileDefinition() {
 
 
     useEffect(() => {
-
+        // onClear();
     }, [headersCount])
 
     const addHeader = () => {
@@ -80,6 +80,10 @@ export default function IPFileDefinition() {
         delete headersObj[i]
     }
 
+    const handleHeadersCount = (e) => {
+        setHeadersCount(e.target.value)
+        setHeaderTable(false)
+    }
 
 
     const onDelete = (i) => {
@@ -152,7 +156,7 @@ export default function IPFileDefinition() {
 
                 {isClicked ? (<div style={{ display: "flex" }}>
                     <p style={{ paddingRight: "1rem", paddingTop: "0.5rem" }}>Enter your desired number of headers </p>
-                    <FormControl type="text" value={headersCount} onChange={(e) => setHeadersCount(e.target.value)} placeholder="Enter Value" style={{ width: "7rem" }} />
+                    <FormControl type="text" value={headersCount} onChange={(e) => handleHeadersCount(e)} placeholder="Enter Value" style={{ width: "7rem" }} />
                     {headersCount ? <Button onClick={addTable} style={{ marginLeft: "1rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Add</Button>
                         : <Button disabled style={{ marginLeft: "1rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Add</Button>}
                 </div>) : null}
@@ -169,6 +173,7 @@ export default function IPFileDefinition() {
                         </thead>
                         <tbody>
                             {headerTable && headersCount ? ([...Array(parseInt(headersCount))].map((i, index) => {
+                                console.log(headersObj)
                                 const header = headersObj[index + 1]
                                 return (
                                     <tr>
