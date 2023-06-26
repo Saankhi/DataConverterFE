@@ -50,6 +50,7 @@ export default function OPFileDefinition() {
 
 
     const onAdd = async () => {
+
         const body = {
             fileName: outputFileName,
             fileType: outputFileType,
@@ -57,7 +58,11 @@ export default function OPFileDefinition() {
             headersArray: Object.values(headersObj),
             department: userDept
         }
-        // if (body.headersArray.forEach(obj => obj.headerValue !== null)) {
+
+        const isNull = body.headersArray.every(obj => obj.headerValue !== "")
+
+        if (isNull) {
+
             const headers = await axios.post("http://localhost:1827/header/addheader", body)
             try {
                 Swal.fire({
@@ -77,13 +82,13 @@ export default function OPFileDefinition() {
                 })
 
             }
-        // } else {
-        //     Swal.fire({
-        //         icon: 'error',
-        //         title: 'Oops...',
-        //         text: 'Header value should not be empty! Please check it'
-        //     })
-        // }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Header value should not be empty! Please check it'
+            })
+        }
     }
 
     const deleteHeader = (i) => {
@@ -154,10 +159,6 @@ export default function OPFileDefinition() {
 
                 </div><br />
 
-                {/* <Form.Group style={{ display: "flex", width: "30rem" }}>
-                    <FormLabel style={{ padding: "0.5rem" }}>Description</FormLabel>
-                    <FormControl type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe about output file..." />
-                </Form.Group><br /> */}
 
                 {outputFileName && outputFileType ?
                     <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button><br /></> :
@@ -173,26 +174,27 @@ export default function OPFileDefinition() {
 
                 {headerTable ? (<>
                     <br />
-                    <Table striped bordered hover style={{ width: "30rem" }}>
-                        <thead>
-                            <tr>
-                                <th>S.No</th>
-                                <th>Header Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {headerTable && headersCount ? ([...Array(parseInt(headersCount))].map((i, index) => {
-                                const header = headersObj[index + 1]
-                                return (
-                                    <tr>
-                                        <th>Header {index + 1}</th>
-                                        <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete onClick={() => onDelete(index + 1)} style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red", fontSize: "1.3rem" }} /></InputGroup></th>
-                                    </tr>
-                                )
-                            })) : null}
-                        </tbody>
+                    <div style={{ overflowY: "scroll", maxHeight: "20rem" }}>
+                        <Table striped bordered hover style={{ width: "30rem" }}>
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Header Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {headerTable && headersCount ? ([...Array(parseInt(headersCount))].map((i, index) => {
+                                    const header = headersObj[index + 1]
+                                    return (
+                                        <tr>
+                                            <th>Header {index + 1}</th>
+                                            <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete onClick={() => onDelete(index + 1)} style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red", fontSize: "1.3rem" }} /></InputGroup></th>
+                                        </tr>
+                                    )
+                                })) : null}
+                            </tbody>
 
-                    </Table><br />
+                        </Table></div><br />
 
                     <Button onClick={onAdd} style={{ margin: "0rem 2rem 1rem 50rem", width: "8rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Save</Button>
                 </>) : null}

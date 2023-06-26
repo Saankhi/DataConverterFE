@@ -5,6 +5,7 @@ import * as js2xmlparser from "js2xmlparser";
 import PopUp from "../Components/PopUp";
 import HeaderUser from "../Components/HeaderUser";
 import axios from "axios"
+import Swal from "sweetalert2";
 
 
 
@@ -24,6 +25,7 @@ export default function UserHome() {
     const [ipJSONData, setIPJSONData] = useState([])
     const [opFiles, setOPFiles] = useState([])
     const [ipFileNames, setIPFileNames] = useState([])
+    const [ipHeaders, setIPHeaders] = useState([])
 
 
 
@@ -145,7 +147,7 @@ export default function UserHome() {
 
     // Conerting input file data to JSON ::::  filtering in this segment ::::
 
-    const headerArrays = Object.values(mappedHeaders)
+
 
     async function convertData() {
 
@@ -160,6 +162,7 @@ export default function UserHome() {
 
             console.log("IP JSON Data:", jsonData)
             setIPJSONData(jsonData)
+            setIPHeaders(Object.keys(jsonData[0]))
         }
 
         else {
@@ -185,58 +188,46 @@ export default function UserHome() {
 
     }
 
-
     // Data conersion to opData 
 
     function OPJSONData() {
 
-        const inputHeaders = Object.keys(ipJSONData[0])
 
-        console.log("inputHeaders:", inputHeaders)
-        console.log("mappedHeaders:", mappedHeaders)
-        console.log("headerArrays:", headerArrays)
+        function transformInput(ipJSONData, ipHeaders, mappedHeaders) {
+            const output = [];
 
-        ipJSONData.forEach((obj) => {
-            headerArrays.map((arr) => {
-                if (arr.length !== 1) {
-                    const newHeader = Object.keys(mappedHeaders).find(key => { return arraysAreEqual(mappedHeaders[key], arr) })
-                    for (let i = 0; i < arr.length; i++) {
-                        if (i === 0) {
-                            obj[newHeader] = obj[arr[i]] + " "
-                        } else {
-                            obj[newHeader] += obj[arr[i]] + " "
+            for (let i = 0; i < ipJSONData.length; i++) {
+                const transformedObj = {};
 
+                for (const key in mappedHeaders) {
+                    const mappedKeys = mappedHeaders[key];
+
+                    for (let j = 0; j < mappedKeys.length; j++) {
+                        const mappedKey = mappedKeys[j];
+
+                        if (ipHeaders.includes(mappedKey)) {
+                            if (!transformedObj[key]) {
+                                transformedObj[key] = "";
+                            }
+
+                            transformedObj[key] += ipJSONData[i][mappedKey] + " ";
                         }
-                        delete obj[arr[i]]
                     }
-
-                } else {
-                    const header = arr[0]
-                    const newHeader = Object.keys(mappedHeaders).find(key => { return arraysAreEqual(mappedHeaders[key], arr) })
-                    obj[newHeader] = obj[header]
-                    if (newHeader !== header) delete obj[header]
                 }
 
-            })
+                output.push(transformedObj);
+            }
 
-        })
+            return output;
+        }
 
-        console.log("Before checking:", ipJSONData)
+        const output = transformInput(ipJSONData, ipHeaders, mappedHeaders);
 
-
-        ipJSONData.forEach((obj) => {
-            headerArrays.map((arr) => {
-                inputHeaders.map((header) => {
-                    const isPresent = arr.includes(header)
-                    if (!isPresent) delete obj[header]
-                })
-            })
-
-        })
-
-        console.log("After Formula Field:", ipJSONData)
-        setParsedData(ipJSONData)
+        setParsedData(output)
     }
+
+
+
 
     // Converting JSON data to Ouput file type(extract) ::::
 
@@ -250,7 +241,18 @@ export default function UserHome() {
             const jsonSheet = XLSX.utils.json_to_sheet(parsedData)
             var newWb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(newWb, jsonSheet, "Sheet1")
-            return XLSX.writeFile(newWb, outputFileName + ".xlsx")
+            return (
+                XLSX.writeFile(newWb, outputFileName + ".xlsx"),
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Your file has been downloaded',
+                    showConfirmButton: false,
+                    timer: 1500
+                }),
+                window.location.reload()
+
+            )
         }
 
         // JSON to XML -- Needs to be extracted ::::
@@ -272,7 +274,7 @@ export default function UserHome() {
                 console.log("OP Json Data: ", parsedData)
                 const jsonData = JSON.stringify(parsedData)
 
-                console.log("JSON Data:".jsonData)
+                console.log("JSON Data:", jsonData)
 
                 const blob = new Blob([jsonData], { type: "application/json" });
                 const url = URL.createObjectURL(blob);
@@ -333,7 +335,7 @@ export default function UserHome() {
                 </div><br />
 
                 {parsedData ?
-                    <Button variant="outline-success" onClick={extractParsedData}>Download File</Button> :
+                    <Button variant="outline-success" onClick={() => { setTimeout(() => { extractParsedData() }, 2000) }}>Download File</Button> :
                     (ipFile && inputFile && opFile ?
                         <Button variant="success" onClick={() => { convertData(); setOpen(true) }}>Convert File</Button>
                         : <Button variant="success" disabled>Convert File</Button>)}

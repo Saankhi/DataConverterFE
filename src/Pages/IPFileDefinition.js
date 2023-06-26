@@ -24,7 +24,6 @@ export default function IPFileDefinition() {
 
 
     useEffect(() => {
-        // onClear();
     }, [headersCount])
 
     const addHeader = () => {
@@ -74,7 +73,7 @@ export default function IPFileDefinition() {
                     icon: 'success',
                     title: 'Template created successfully.Navigate to output tab if you want to create an output template',
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 3000
                 })
 
             } catch (err) {
@@ -162,11 +161,6 @@ export default function IPFileDefinition() {
 
                 </div><br />
 
-                {/* <Form.Group style={{ display: "flex", width: "30rem" }}>
-                    <FormLabel style={{ padding: "0.5rem" }}>Description</FormLabel>
-                    <FormControl type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe about input file..." />
-
-                </Form.Group><br /> */}
 
                 {inputFileName && inputFileType ?
                     <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button><br /></> :
@@ -182,26 +176,27 @@ export default function IPFileDefinition() {
 
                 {headerTable ? (<>
                     <br />
-                    <Table striped bordered hover style={{ width: "30rem" }}>
-                        <thead>
-                            <tr>
-                                <th>S.No</th>
-                                <th>Header Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {headerTable && headersCount ? ([...Array(parseInt(headersCount))].map((i, index) => {
-                                const header = headersObj[index + 1]
-                                return (
-                                    <tr>
-                                        <th>Header {index + 1}</th>
-                                        <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete onClick={() => onDelete(index + 1)} style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red", fontSize: "1.3rem" }} /></InputGroup></th>
-                                    </tr>
-                                )
-                            })) : null}
-                        </tbody>
+                    <div style={{ overflowY: "scroll", maxHeight: "20rem" }}>
+                        <Table striped bordered hover style={{ width: "30rem" }}>
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Header Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {headerTable && headersCount ? ([...Array(parseInt(headersCount))].map((i, index) => {
+                                    const header = headersObj[index + 1]
+                                    return (
+                                        <tr>
+                                            <th>Header {index + 1}</th>
+                                            <th><InputGroup><FormControl type="text" value={header["headerValue"]} onChange={(e) => handleChange(index + 1, e)} /><MdIcons.MdDelete onClick={() => onDelete(index + 1)} style={{ paddingLeft: "0.2rem", marginTop: "0.5rem", color: "red", fontSize: "1.3rem" }} /></InputGroup></th>
+                                        </tr>
+                                    )
+                                })) : null}
+                            </tbody>
 
-                    </Table><br />
+                        </Table></div><br />
 
                     <Button onClick={onAdd} style={{ margin: "0rem 2rem 1rem 50rem", width: "8rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>Save</Button>
                 </>) : null}

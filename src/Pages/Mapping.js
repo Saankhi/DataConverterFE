@@ -197,7 +197,7 @@ export default function Mapping() {
                                 )
                             })}
                         </div>
-                        {showIP ? (<div style={{ backgroundColor: '#A9ECFB', width: '25rem', height: "calc(100vh - 178px)" }} className="hdfc">
+                        {showIP ? (<div style={{ backgroundColor: '#A9ECFB', width: '25rem', height: "calc(100vh - 178px)"  , overflowY:"scroll"}} className="hdfc">
 
                             {ipFileHeadersData.map((file, idx) => {
                                 return (
