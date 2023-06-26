@@ -67,7 +67,7 @@ export default function Mapping() {
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong!please try again after sometime.'
-              })
+            })
         }
     }
 
@@ -96,7 +96,7 @@ export default function Mapping() {
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong!Please try again after sometime'
-              })
+            })
         }
     }
 
@@ -122,7 +122,7 @@ export default function Mapping() {
                 title: 'Mapping has been saved successfully',
                 showConfirmButton: false,
                 timer: 1500
-              })
+            })
             navigate('/mytemplates')
 
         } catch (err) {
@@ -130,7 +130,7 @@ export default function Mapping() {
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong!'
-              })
+            })
         }
     }
 
@@ -138,11 +138,10 @@ export default function Mapping() {
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: "space-evenly", marginLeft: '350px' }}><h1 >Field Mapping</h1>
-                <a href="" style={{ marginTop: '20px' }}>Load Saved Mapping</a></div>
+            <div style={{ display: 'flex', justifyContent: "space-evenly" }}><h1>Field Mapping</h1></div>
             <div style={{ justifyContent: 'space-between', display: 'flex', backgroundColor: 'black', color: '#fff', height: "3rem" }}>
                 <div style={{ display: 'flex', marginLeft: '40px' }}>
-                
+
                     {fileNamesData.length > 0 ? (<>
                         <Form.Select style={{ backgroundColor: "black", color: "white", border: "none", marginLeft: "8rem" }} value={opFile} onChange={(e) => (setOPFile(e.target.value), getHeaders(e.target.value), setShowOp(true))}>
                             <option>Output File</option>
@@ -155,7 +154,7 @@ export default function Mapping() {
                         </Form.Select>
                         {opFile ? <span><h6 style={{ textAlign: "center", marginTop: "1rem" }}>(Output)</h6></span> : null}
 
-                    </>) : (<Form.Select>
+                    </>) : (<Form.Select style={{ backgroundColor: "black", color: "white", border: "none", marginLeft: "8rem" }}>
                         <option>Output Format Type</option>
                     </Form.Select>)}
 
@@ -171,7 +170,7 @@ export default function Mapping() {
                                     return <option>{file.fileName}</option>
                             })}
 
-                        </Form.Select>) : (<Form.Select>
+                        </Form.Select>) : (<Form.Select style={{ backgroundColor: "black", color: "white", border: "none", marginLeft: "8rem" }}>
                             <option>Input Format Type</option>
                         </Form.Select>)}
                 </div>
@@ -197,7 +196,7 @@ export default function Mapping() {
                                 )
                             })}
                         </div>
-                        {showIP ? (<div style={{ backgroundColor: '#A9ECFB', width: '25rem', height: "calc(100vh - 178px)"  , overflowY:"scroll"}} className="hdfc">
+                        {showIP ? (<div style={{ backgroundColor: '#A9ECFB', width: '25rem', height: "calc(100vh - 178px)", overflowY: "scroll" }} className="hdfc">
 
                             {ipFileHeadersData.map((file, idx) => {
                                 return (

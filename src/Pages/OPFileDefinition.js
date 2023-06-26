@@ -59,28 +59,65 @@ export default function OPFileDefinition() {
             department: userDept
         }
 
+
         const isNull = body.headersArray.every(obj => obj.headerValue !== "")
 
         if (isNull) {
 
-            const headers = await axios.post("http://localhost:1827/header/addheader", body)
-            try {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: 'Template created successfully',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
+            if (outputFileFormat === "text/xml") {
 
-                navigate('/mapping')
-            } catch (err) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Failed adding data'
-                })
+                var regex = /[!@#$%^&*(),.?":{}|<>]/;
 
+                const isPresent = body.headersArray.find(obj => regex.test(obj.headerValue))
+
+                if (isPresent) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'XML tags cannot contain special characters!Please check once.'
+                    })
+                } else {
+                    try {
+                        await axios.post("http://localhost:1827/header/addheader", body)
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Template created successfully',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+
+                        navigate('/mapping')
+                    } catch (err) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Failed adding data'
+                        })
+
+                    }
+                }
+
+            } else {
+                try {
+                    await axios.post("http://localhost:1827/header/addheader", body)
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Template created successfully',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+
+                    navigate('/mapping')
+                } catch (err) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Failed adding data'
+                    })
+
+                }
             }
         } else {
             Swal.fire({
