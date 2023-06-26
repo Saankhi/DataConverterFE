@@ -33,22 +33,6 @@ export default function UserHome() {
     const userDept = userInfo[0].department
 
 
-    function arraysAreEqual(array1, array2) {
-        if (array1.length !== array2.length) {
-            return false;
-        }
-
-        for (let i = 0; i < array1.length; i++) {
-            if (array1[i] !== array2[i]) {
-                return false;
-            }
-        }
-
-
-        return true;
-    }
-
-
     const handleFile = async (e) => {
 
         const file = e.target.files[0];
@@ -79,12 +63,16 @@ export default function UserHome() {
             ipFileName: ipFile,
             opFileName: outputFileName
         }
-        const result = await axios.post("http://localhost:1827/header/usermapping", body)
+
         try {
+            const result = await axios.post("http://localhost:1827/header/usermapping", body)
             setMappedHeaders(result.data.mappedHeaders)
         } catch (err) {
-            console.log("Error retreving data")
-            console.log(err)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong! Please try after sometime'
+            })
         }
     }
 
@@ -94,25 +82,35 @@ export default function UserHome() {
             ipFilekey: ipFile,
             departmentkey: userDept
         }
-        const result = await axios.post("http://localhost:1827/header/getmapping", body)
+
         try {
+            const result = await axios.post("http://localhost:1827/header/getmapping", body)
             setOPFiles(result.data.mappingData)
         } catch (err) {
-            console.log("Error")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong! Please try after sometime'
+            })
         }
     }
 
     const handelInputFileFormat = async (e) => {
 
         const key = e.target.value
-        const result = await axios.get("http://localhost:1827/header/allheaders/" + key)
+
         try {
+            const result = await axios.get("http://localhost:1827/header/allheaders/" + key)
             setIPFile(key)
             setInputFileType(result.data.headersDetails[0].fileFormat)
             setEnableFile(true)
             setEnableOp(true)
         } catch (err) {
-            console.log("Error")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong! Please try after sometime'
+            })
         }
     }
 
@@ -120,27 +118,37 @@ export default function UserHome() {
     const handelOutputFileFormat = async (e) => {
 
         const key = e.target.value
-        const result = await axios.get("http://localhost:1827/header/allheaders/" + key)
+
         try {
+            const result = await axios.get("http://localhost:1827/header/allheaders/" + key)
             setOPFile(key)
             setOutputFileName(result.data.headersDetails[0].fileName)
             setOutputFileType(result.data.headersDetails[0].fileFormat)
 
         } catch (err) {
-            console.log("Error")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong! Please try after sometime'
+            })
         }
     }
 
 
     const getFileNames = async () => {
-        const data = await axios.get("http://localhost:1827/header/mapping/" + userDept)
+
         try {
+            const data = await axios.get("http://localhost:1827/header/mapping/" + userDept)
             const uniqueArray = data.data.mappingData.filter((obj, index, self) =>
                 index === self.findIndex((o) => o.ipFile === obj.ipFile)
             );
             setIPFileNames(uniqueArray)
         } catch (err) {
-            console.log("Error")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong! Please try after sometime'
+            })
         }
     }
 
@@ -160,7 +168,6 @@ export default function UserHome() {
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet)
 
-            console.log("IP JSON Data:", jsonData)
             setIPJSONData(jsonData)
             setIPHeaders(Object.keys(jsonData[0]))
         }
@@ -182,7 +189,6 @@ export default function UserHome() {
                 arr.push(recordObj)
             });
 
-            console.log("IP JSON Data:", arr)
             setIPJSONData(arr)
         }
 
@@ -233,11 +239,9 @@ export default function UserHome() {
 
     async function extractParsedData() {
 
-        console.log(outputFileType)
 
         if (outputFileType !== "text/xml" && outputFileType !== ".json") {
 
-            console.log("OP Json Data: ", parsedData)
             const jsonSheet = XLSX.utils.json_to_sheet(parsedData)
             var newWb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(newWb, jsonSheet, "Sheet1")
@@ -259,7 +263,6 @@ export default function UserHome() {
         else {
 
             if (outputFileType !== ".json") {
-                console.log("OP Json Data: ", parsedData)
                 const xmlData = js2xmlparser.parse("data", parsedData)
 
                 const blob = new Blob([xmlData], { type: "text/xml" });
@@ -271,10 +274,7 @@ export default function UserHome() {
                 link.click();
             } else {
 
-                console.log("OP Json Data: ", parsedData)
                 const jsonData = JSON.stringify(parsedData)
-
-                console.log("JSON Data:", jsonData)
 
                 const blob = new Blob([jsonData], { type: "application/json" });
                 const url = URL.createObjectURL(blob);
