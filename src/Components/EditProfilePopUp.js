@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Modal, Form, Button } from 'react-bootstrap';
+import Swal from "sweetalert2";
 
 
 export default function EditProfilePopUp(props) {
@@ -29,11 +30,14 @@ export default function EditProfilePopUp(props) {
         }
         const result = await axios.put("http://localhost:1827/auth/editprofile", body)
         try {
-            console.log(result.data.message)
-            console.log(result.data.data)
             props.onHide();
         } catch (error) {
-            console.log(error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Cannot update your profile right now please try after sometime !',
+                footer: '<a href="">Why do I have this issue?</a>'
+              })
         }
     }
     return (
@@ -69,7 +73,7 @@ export default function EditProfilePopUp(props) {
                                 <div>
                                     <Form.Group >
                                         <Form.Label>Mobile</Form.Label>
-                                        <Form.Control type="text" value={mobile} onChange={(e) => setMobile(e.target.value)} />
+                                        <Form.Control type="number" value={mobile} onChange={(e) => setMobile(e.target.value)} />
                                     </Form.Group>
 
                                     <Form.Group >

@@ -9,6 +9,7 @@ import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import Swal from "sweetalert2";
 
 
 
@@ -43,13 +44,10 @@ export default function Mapping() {
         setOPSelect({ ...opSelect, [idx]: e.target.value })
     }
 
-    console.log(opSelect)
 
     const handleChange = (e, idx) => {
         setSelectedOptions({ ...selectedOptions, [idx]: e.target.value })
     }
-
-    console.log(selectedOptions)
 
 
     useEffect(() => {
@@ -65,7 +63,11 @@ export default function Mapping() {
         try {
             setFileNamesData(data.data.fileTypeDetails)
         } catch (err) {
-            console.log("Error retreving data")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!please try again after sometime.'
+              })
         }
     }
 
@@ -90,7 +92,11 @@ export default function Mapping() {
                 })
             }
         } catch (err) {
-            console.log("Error retreving data")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!Please try again after sometime'
+              })
         }
     }
 
@@ -108,16 +114,23 @@ export default function Mapping() {
             mappedHeaders: obj,
             department: key
         }
-        console.log(body)
         const headers = await axios.post("http://localhost:1827/header/addmapping", body)
         try {
-            console.log(headers.data.message)
-            alert('Your Mapping has been saved successfully')
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Mapping has been saved successfully',
+                showConfirmButton: false,
+                timer: 1500
+              })
             navigate('/mytemplates')
 
         } catch (err) {
-            alert('Mapping Failed')
-            console.log(err)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!'
+              })
         }
     }
 

@@ -31,6 +31,22 @@ export default function UserHome() {
     const userDept = userInfo[0].department
 
 
+    function arraysAreEqual(array1, array2) {
+        if (array1.length !== array2.length) {
+            return false;
+        }
+
+        for (let i = 0; i < array1.length; i++) {
+            if (array1[i] !== array2[i]) {
+                return false;
+            }
+        }
+
+
+        return true;
+    }
+
+
     const handleFile = async (e) => {
 
         const file = e.target.files[0];
@@ -76,8 +92,6 @@ export default function UserHome() {
             ipFilekey: ipFile,
             departmentkey: userDept
         }
-
-        console.log(body)
         const result = await axios.post("http://localhost:1827/header/getmapping", body)
         try {
             setOPFiles(result.data.mappingData)
@@ -119,7 +133,10 @@ export default function UserHome() {
     const getFileNames = async () => {
         const data = await axios.get("http://localhost:1827/header/mapping/" + userDept)
         try {
-            setIPFileNames(data.data.mappingData)
+            const uniqueArray = data.data.mappingData.filter((obj, index, self) =>
+                index === self.findIndex((o) => o.ipFile === obj.ipFile)
+            );
+            setIPFileNames(uniqueArray)
         } catch (err) {
             console.log("Error")
         }
@@ -141,6 +158,7 @@ export default function UserHome() {
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const jsonData = XLSX.utils.sheet_to_json(worksheet)
 
+            console.log("IP JSON Data:", jsonData)
             setIPJSONData(jsonData)
         }
 
@@ -161,7 +179,8 @@ export default function UserHome() {
                 arr.push(recordObj)
             });
 
-            setParsedData(arr)
+            console.log("IP JSON Data:", arr)
+            setIPJSONData(arr)
         }
 
     }
@@ -173,10 +192,14 @@ export default function UserHome() {
 
         const inputHeaders = Object.keys(ipJSONData[0])
 
+        console.log("inputHeaders:", inputHeaders)
+        console.log("mappedHeaders:", mappedHeaders)
+        console.log("headerArrays:", headerArrays)
+
         ipJSONData.forEach((obj) => {
             headerArrays.map((arr) => {
                 if (arr.length !== 1) {
-                    const newHeader = Object.keys(mappedHeaders).find(key => mappedHeaders[key] === arr)
+                    const newHeader = Object.keys(mappedHeaders).find(key => { return arraysAreEqual(mappedHeaders[key], arr) })
                     for (let i = 0; i < arr.length; i++) {
                         if (i === 0) {
                             obj[newHeader] = obj[arr[i]] + " "
@@ -189,15 +212,16 @@ export default function UserHome() {
 
                 } else {
                     const header = arr[0]
-                    const newHeader = Object.keys(mappedHeaders).find(key =>
-                        mappedHeaders[key] === arr)
+                    const newHeader = Object.keys(mappedHeaders).find(key => { return arraysAreEqual(mappedHeaders[key], arr) })
                     obj[newHeader] = obj[header]
-                    delete obj[header]
+                    if (newHeader !== header) delete obj[header]
                 }
 
             })
 
         })
+
+        console.log("Before checking:", ipJSONData)
 
 
         ipJSONData.forEach((obj) => {
@@ -210,6 +234,7 @@ export default function UserHome() {
 
         })
 
+        console.log("After Formula Field:", ipJSONData)
         setParsedData(ipJSONData)
     }
 
@@ -217,8 +242,11 @@ export default function UserHome() {
 
     async function extractParsedData() {
 
-        if (outputFileType !== "xml" && outputFileType !== ".json") {
+        console.log(outputFileType)
 
+        if (outputFileType !== "text/xml" && outputFileType !== ".json") {
+
+            console.log("OP Json Data: ", parsedData)
             const jsonSheet = XLSX.utils.json_to_sheet(parsedData)
             var newWb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(newWb, jsonSheet, "Sheet1")
@@ -229,6 +257,7 @@ export default function UserHome() {
         else {
 
             if (outputFileType !== ".json") {
+                console.log("OP Json Data: ", parsedData)
                 const xmlData = js2xmlparser.parse("data", parsedData)
 
                 const blob = new Blob([xmlData], { type: "text/xml" });
@@ -239,7 +268,11 @@ export default function UserHome() {
                 link.href = url;
                 link.click();
             } else {
+
+                console.log("OP Json Data: ", parsedData)
                 const jsonData = JSON.stringify(parsedData)
+
+                console.log("JSON Data:".jsonData)
 
                 const blob = new Blob([jsonData], { type: "application/json" });
                 const url = URL.createObjectURL(blob);

@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import { Modal } from "react-bootstrap";
-import * as GoIcons from "react-icons/go"
+import * as AiIcons from "react-icons/ai";
+import Swal from "sweetalert2";
 
 
 
@@ -32,14 +33,38 @@ export default function MyTemplates() {
         const result = await axios.get("http://localhost:1827/header/getmappings/" + key)
         try {
             setMappings(result.data.mappingData)
-            // setMappedHeaders(result.data.mappingData.mappedHeaders)
-            // console.log("Records Retrieved")
         } catch (err) {
-            console.log("Error with this call")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!Please try again after sometime.',
+                footer: '<a href="">Why do I have this issue?</a>'
+              })
         }
     }
 
-    console.log(mappings)
+
+    const getMappedHeaders = async (ipFile, opFile) => {
+
+        const body = {
+            dept: key,
+            ip: ipFile,
+            op: opFile
+        }
+
+        const result = await axios.post("http://localhost:1827/header/getmappedHeaders", body)
+        try {
+            setMappedHeaders(result.data.mappingData)
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!Please try again after sometime.',
+                footer: '<a href="">Why do I have this issue?</a>'
+              })
+        }
+
+    }
 
     return (
         <>
@@ -61,14 +86,16 @@ export default function MyTemplates() {
                     <tbody>
 
                         {mappings.map((mapping) => {
+                            const ipFile = mapping.ipFile
+                            const opFile = mapping.opFile
                             return (
                                 <>
                                     <tr style={{ margin: '20px' }}>
-                                        <td>{mapping.ipFile}</td>
-                                        <td>{mapping.opFile}</td>
+                                        <td>{ipFile}</td>
+                                        <td>{opFile}</td>
                                         <td>
                                             <Button
-                                                onClick={() => setLgShow(true)}
+                                                onClick={() => { setLgShow(true); getMappedHeaders(ipFile, opFile) }}
                                                 variant="light"
                                                 style={{ backgroundColor: '#12B5B0', color: 'white' }}
                                             >
@@ -84,19 +111,20 @@ export default function MyTemplates() {
                                                 </Modal.Header>
                                                 <Modal.Body>
                                                     <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                                                        <div><h4>Input Field</h4>
+                                                        <div><h4 style={{ color: '#12B5B0' }}>Input Field</h4><br />
                                                             {
-                                                                Object.entries(mapping.mappedHeaders).map(
+                                                                Object.entries(mappedHeaders).map(
                                                                     (arr) => {
-                                                                        return <div>{arr[1].join(', ')}<GoIcons.GoArrowRight /></div>
+
+                                                                        return <p>{arr[1].join(', ')}<AiIcons.AiOutlineArrowRight style={{ fontSize: '1rem', margin: 'auto', marginLeft: '2rem' }} /></p>
                                                                     }
                                                                 )
                                                             }
                                                         </div>
                                                         <div>
-                                                            <h4>Output Field</h4>
+                                                            <h4 style={{ color: '#12B5B0' }}>Output Field</h4><br />
                                                             {
-                                                                Object.entries(mapping.mappedHeaders).map(
+                                                                Object.entries(mappedHeaders).map(
                                                                     (arr) => {
                                                                         return <p>{arr[0]}</p>
                                                                     }

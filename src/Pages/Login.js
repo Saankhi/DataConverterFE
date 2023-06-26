@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap"
 import axios from "axios"
+import Swal from "sweetalert2";
 
 
 export default function Login() {
@@ -14,50 +15,57 @@ export default function Login() {
 
     const onLogin = async (e) => {
         e.preventDefault();
-        if (password === '') {
-            setpasswordError('Password is required');
-        } else {
-            setpasswordError('');
+
+        const body = {
+            email: email,
+            password: password
         }
 
-        if (email === '') {
-            setemailError('Email is required');
-        } else {
-            setemailError('');
-        }
-
-        if (password !== '' && email !== '') {
-            const body = {
-                email: email,
-                password: password
-            }
-
-            const result = await axios.post("http://localhost:1827/auth/signin", body)
-            try {
-                console.log(result.data.details)
-                console.log(result.status)
-                if (result.status === 201) {
-                    if (result.data.details[0]?.role !== "Admin") {
-                        localStorage.setItem('isLoggedIn', true)
-                        localStorage.setItem('userInfo', JSON.stringify(result.data.details))
-                        navigate('/userhome')
-                    } else {
-                        localStorage.setItem('isLoggedIn', true)
-                        navigate('/adminhome')
-                        localStorage.setItem('userInfo', JSON.stringify(result.data.details))
-                    }
+        const result = await axios.post("http://localhost:1827/auth/signin", body)
+        try {
+            if (result.status === 200) {
+                if (result.data.details[0]?.role !== "Admin") {
+                    localStorage.setItem('isLoggedIn', true)
+                    localStorage.setItem('userInfo', JSON.stringify(result.data.details))
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Login Successfull',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    navigate('/userhome')
                 } else {
-                    alert(result.data.message)
+                    localStorage.setItem('isLoggedIn', true)
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Login Successfull',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    navigate('/adminhome')
+                    localStorage.setItem('userInfo', JSON.stringify(result.data.details))
                 }
-            } catch (err) {
-                alert("Login failed")
-                console.log(err)
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: result.data.message
+                })
             }
-
-
-
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong. Please try again later'
+            })
         }
+
+
+
     }
+
 
 
     return (

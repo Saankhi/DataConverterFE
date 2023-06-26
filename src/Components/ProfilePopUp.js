@@ -29,7 +29,12 @@ export default function ProfilePopUp(props) {
         try {
             setAdminInfo(result.data.details)
         } catch (err) {
-            console.log("Error retreiving the details")
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Error retreiving the details please try after sometime',
+                footer: '<a href="">Why do I have this issue?</a>'
+              })
         }
 
     }
@@ -41,43 +46,37 @@ export default function ProfilePopUp(props) {
     }
     const logOut = () => {
         const swalWithBootstrapButtons = Swal.mixin({
-          customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
         })
-      
+
         swalWithBootstrapButtons.fire({
-          title: 'Logging out',
-            text: 'Are you sure to log out ?',
+            title: 'Logging out',
+            text: 'Are you sure ?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes, Logout',
-            
+
             cancelButtonText: 'No, cancel!',
             reverseButtons: true
         }).then((result) => {
-          if (result.isConfirmed) {
-            swalWithBootstrapButtons.fire(
-              'Logged out!',
-              'You have successfully loggedout.',
-              'success'
-            )
-            handleLogout()
-          } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            swalWithBootstrapButtons.fire(
-              'Cancelled',
-                'Your logout is failed',
-                'error'
-            )
-          }
+            if (result.isConfirmed) {
+                swalWithBootstrapButtons.fire(
+                    'Logged out!',
+                    'You have successfully logged out.',
+                    'success'
+                )
+                handleLogout()
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) { }
         })
-      }
-    
+    }
+
 
 
 
@@ -119,28 +118,28 @@ export default function ProfilePopUp(props) {
                         </div>
 
                     </div>
-                    <div style={{justifyContent:'space-between', display:'flex'}}>
-                    
-                    <div>
-                    <Button variant="primary"
-                        style={{ marginLeft: '300px', width: '140px', borderRadius: '10px', backgroundColor: '#12B5B0', }}
-                        onClick={() => { setModalShow(true) }}>
+                    <div style={{ justifyContent: 'space-between', display: 'flex' }}>
 
-                        Edit Profile
-                    </Button>
-                    <EditProfilePopUp
-                        show={modalShow}
-                        onHide={() => setModalShow(false)}
-                        adminInfo={adminInfo}
-                    />
+                        <div>
+                            <Button variant="primary"
+                                style={{ marginLeft: '300px', width: '140px', borderRadius: '10px', backgroundColor: '#12B5B0', }}
+                                onClick={() => { setModalShow(true) }}>
+
+                                Edit Profile
+                            </Button>
+                            <EditProfilePopUp
+                                show={modalShow}
+                                onHide={() => setModalShow(false)}
+                                adminInfo={adminInfo}
+                            />
+                        </div>
+                        <div style={{ fontSize: '30px' }}>
+                            <AiIcons.AiOutlinePoweroff onClick={logOut} />
+                        </div>
                     </div>
-                    <div style={{fontSize:'30px'}}>
-                    <AiIcons.AiOutlinePoweroff onClick={logOut} />
-                    </div>
-                    </div>
-                    
+
                 </Modal.Body>
-                
+
             </Modal>
         </>
 

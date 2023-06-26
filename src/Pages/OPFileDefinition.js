@@ -57,17 +57,33 @@ export default function OPFileDefinition() {
             headersArray: Object.values(headersObj),
             department: userDept
         }
+        // if (body.headersArray.forEach(obj => obj.headerValue !== null)) {
+            const headers = await axios.post("http://localhost:1827/header/addheader", body)
+            try {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Template created successfully',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
 
-        console.log(body)
-        const headers = await axios.post("http://localhost:1827/header/addheader", body)
-        try {
-            alert('Data added successfull')
-            console.log(headers.data.message)
-            navigate('/mapping')
-        } catch (err) {
-            alert('Failed adding data')
-            console.log(err)
-        }
+                navigate('/mapping')
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Failed adding data'
+                })
+
+            }
+        // } else {
+        //     Swal.fire({
+        //         icon: 'error',
+        //         title: 'Oops...',
+        //         text: 'Header value should not be empty! Please check it'
+        //     })
+        // }
     }
 
     const deleteHeader = (i) => {
@@ -138,12 +154,12 @@ export default function OPFileDefinition() {
 
                 </div><br />
 
-                <Form.Group style={{ display: "flex", width: "30rem" }}>
+                {/* <Form.Group style={{ display: "flex", width: "30rem" }}>
                     <FormLabel style={{ padding: "0.5rem" }}>Description</FormLabel>
                     <FormControl type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe about output file..." />
-                </Form.Group><br />
+                </Form.Group><br /> */}
 
-                {outputFileName && outputFileType && description ?
+                {outputFileName && outputFileType ?
                     <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button><br /></> :
                     <Button disabled style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button>}
 

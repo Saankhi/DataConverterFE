@@ -53,11 +53,8 @@ export default function IPFileDefinition() {
         setHeadersObj({ ...headersObj, [key]: { "headerValue": e.target.value } })
     }
 
-
-    console.log(headersObj)
-
-
     const onAdd = async () => {
+
         const body = {
             fileName: inputFileName,
             fileType: inputFileType,
@@ -65,13 +62,34 @@ export default function IPFileDefinition() {
             headersArray: Object.values(headersObj),
             department: userDept
         }
-        console.log(body)
-        const headers = await axios.post("http://localhost:1827/header/addheader", body)
-        try {
-            alert('Data added successfull')
 
-        } catch (err) {
-            alert('Failed adding data')
+        const isNull = body.headersArray.every(obj => obj.headerValue !== "")
+
+        if (isNull) {
+
+            await axios.post("http://localhost:1827/header/addheader", body)
+            try {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Template created successfully.Navigate to output tab if you want to create an output template',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+
+            } catch (err) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Failed adding data'
+                })
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Header value should not be empty! Please check it'
+            })
         }
     }
 
@@ -100,7 +118,7 @@ export default function IPFileDefinition() {
             if (result.isConfirmed) {
                 Swal.fire(
                     'Deleted!',
-                    'Your file has been deleted.',
+                    'Header has been deleted.',
                     'success'
                 )
                 deleteHeader(i);
@@ -144,13 +162,13 @@ export default function IPFileDefinition() {
 
                 </div><br />
 
-                <Form.Group style={{ display: "flex", width: "30rem" }}>
+                {/* <Form.Group style={{ display: "flex", width: "30rem" }}>
                     <FormLabel style={{ padding: "0.5rem" }}>Description</FormLabel>
                     <FormControl type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Describe about input file..." />
 
-                </Form.Group><br />
+                </Form.Group><br /> */}
 
-                {inputFileName && inputFileType && description ?
+                {inputFileName && inputFileType ?
                     <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button><br /></> :
                     <Button disabled style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button>}
 
@@ -173,7 +191,6 @@ export default function IPFileDefinition() {
                         </thead>
                         <tbody>
                             {headerTable && headersCount ? ([...Array(parseInt(headersCount))].map((i, index) => {
-                                console.log(headersObj)
                                 const header = headersObj[index + 1]
                                 return (
                                     <tr>

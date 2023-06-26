@@ -30,10 +30,7 @@ export default function AdminContactUs() {
         }
 
         await axios.post("http://localhost:1827/auth/contactus", body)
-        console.log(body)
             .then((response) => {
-                console.log(body)
-                console.log(response)
                 Swal.fire({
                     position: 'center',
                     icon: 'success',

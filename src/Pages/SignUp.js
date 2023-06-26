@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import * as TiIcons from "react-icons/ti"
 import * as RiIcons from "react-icons/ri"
+import Swal from "sweetalert2";
 
 
 export default function SignUp() {
@@ -24,11 +25,6 @@ export default function SignUp() {
     const handelComparePass = (e) => {
 
         setConfirmPass(e.target.value)
-        if (password !== e.target.value) {
-            console.log("Passwords dont match")
-        } else {
-            console.log("Passwords match")
-        }
     }
 
     const onSignUp = async () => {
@@ -42,13 +38,35 @@ export default function SignUp() {
             role: role,
             department: depart
         }
-        const result = await axios.post("http://localhost:1827/auth/signup", body)
+
 
         try {
-            console.log(result.data.message)
-            navigate('/')
+            await axios.post("http://localhost:1827/auth/signup", body)
+            Swal.fire({
+                title: 'Signup Successfull',
+                icon: 'success',
+                confirmButtonColor: 'green',
+                confirmButtonText: 'Okay'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate('/')
+                }
+            }).catch((err) => console.log(err))
+
         } catch (err) {
-            console.log(err)
+            if (err.response.data.error.code === "ER_DUP_ENTRY") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Mobile number already in use!Please check.'
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!Please try again after sometime'
+                })
+            }
         }
 
     }
@@ -60,7 +78,7 @@ export default function SignUp() {
 
                 <p style={{ textAlign: "end", color: "White", marginRight: "2rem", paddingTop: "2rem" }}>Already have an account?<Link to="/" style={{ color: "#12B5B0" }}>Sign in here</Link></p>
 
-                <Form className="form" style={{ marginLeft: "25rem", marginTop: "2rem" }}>
+                <Form className="form" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
 
                     <h3 style={{ color: "#12B5B0", textAlign: "left", marginLeft: "9rem" }}>Create An Account</h3>
                     <div className="group-1" style={{ display: "flex" }}>
@@ -103,9 +121,9 @@ export default function SignUp() {
                     </div>
 
                     <div className="group-3" style={{ display: "flex" }}>
-                        <Form.Group style={{width: "15rem",marginRight: "2rem"}}>
+                        <Form.Group style={{ width: "15rem", marginRight: "2rem" }}>
                             <Form.Label style={{ color: "White", marginTop: "1rem", fontSize: "0.9rem" }}>Choose Role</Form.Label>
-                            <Form.Select value={role} onChange={(e) => setRole(e.target.value)} style={{  height: "2rem" }}>
+                            <Form.Select value={role} onChange={(e) => setRole(e.target.value)} style={{ height: "2rem" }}>
                                 <option>Select Your Role</option>
                                 <option value="Admin">Admin</option>
                                 <option value="User">User</option>
