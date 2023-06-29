@@ -197,7 +197,8 @@ export default function Mapping() {
                             })}
                         </div>
                         <div style={{ position: "absolute", top: "95%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                            <Button onClick={onSave} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem", marginLeft: '150px' }} >Save</Button>
+                            {showIP ? <Button onClick={onSave} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem", marginLeft: '150px' }} >Save</Button>
+                                : null}
                         </div>
                         {showIP ? (<div style={{ backgroundColor: '#A9ECFB', width: '25rem', height: "calc(100vh - 178px)", overflowY: "scroll" }} className="hdfc">
 

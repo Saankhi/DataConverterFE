@@ -88,8 +88,6 @@ export default function IPFileDefinition() {
                             showConfirmButton: false,
                             timer: 1500
                         })
-
-                        navigate('/mapping')
                     } catch (err) {
                         Swal.fire({
                             icon: 'error',
