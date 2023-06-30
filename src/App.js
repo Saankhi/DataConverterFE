@@ -13,6 +13,7 @@ import Mapping from "./Pages/Mapping";
 import PrivateRoute from "./PrivateRoute";
 import Header from "./Components/Header";
 import HeaderUser from "./Components/HeaderUser";
+import UserDetails from "./Pages/UsersDetails";
 
 
 export default function App() {
@@ -47,6 +48,7 @@ function AppContent() {
         <Route path="/contactus" element={<PrivateRoute Component={AdminContactUs} />} />
         <Route path="/template" element={<PrivateRoute Component={Template} />} />
         <Route path="/mapping" element={<PrivateRoute Component={Mapping} />} />
+        <Route path="/userdetails" element={<PrivateRoute Component={UserDetails} />} />
       </Routes>
     </>
 

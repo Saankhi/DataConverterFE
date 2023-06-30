@@ -16,7 +16,6 @@ export default function SignUp() {
     const [mobile, setMobile] = useState(null)
     const [password, setPassword] = useState(null)
     const [confrimPass, setConfirmPass] = useState(null)
-    const [role, setRole] = useState(null)
     const [depart, setDepart] = useState(null)
     const navigate = useNavigate();
 
@@ -35,7 +34,7 @@ export default function SignUp() {
             email: email,
             mobile: mobile,
             password: password,
-            role: role,
+            role: "User",
             department: depart
         }
 
@@ -123,10 +122,7 @@ export default function SignUp() {
                     <div className="group-3" style={{ display: "flex" }}>
                         <Form.Group style={{ width: "15rem", marginRight: "2rem" }}>
                             <Form.Label style={{ color: "White", marginTop: "1rem", fontSize: "0.9rem" }}>Choose Role</Form.Label>
-                            <Form.Select value={role} onChange={(e) => setRole(e.target.value)} style={{ height: "2rem" }}>
-                                <option>Select Your Role</option>
-                                <option value="Admin">Admin</option>
-                                <option value="User">User</option>
+                            <Form.Select value="User" style={{ height: "2rem" }}>
                             </Form.Select>
                         </Form.Group>
 
@@ -136,7 +132,7 @@ export default function SignUp() {
                         </Form.Group>
                     </div>
 
-                    {fName && lName && email && mobile && password && password === confrimPass && role && depart ?
+                    {fName && lName && email && mobile && password && password === confrimPass && depart ?
                         <Button variant="success" onClick={onSignUp} style={{ marginTop: "2rem", width: "10rem", marginLeft: "10rem", marginBottom: "2rem" }}>Sign Up</Button>
                         : <Button variant="success" disabled style={{ marginTop: "2rem", width: "10rem", marginLeft: "10rem", marginBottom: "2rem" }}>Sign Up</Button>}
 

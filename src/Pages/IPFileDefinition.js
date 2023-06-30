@@ -104,12 +104,10 @@ export default function IPFileDefinition() {
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Template created successfully.',
+                        title: 'Template created successfully.Please navigate to output tab if uou wish to create a output template.',
                         showConfirmButton: false,
                         timer: 1500
                     })
-
-                    navigate('/mapping')
                 } catch (err) {
                     Swal.fire({
                         icon: 'error',

@@ -50,6 +50,9 @@ export default function Mapping() {
     }
 
 
+    console.log(opSelect)
+    console.log(selectedOptions)
+
     useEffect(() => {
         getFileNames();
     }, [])
@@ -114,8 +117,10 @@ export default function Mapping() {
             mappedHeaders: obj,
             department: key
         }
-        const headers = await axios.post("http://localhost:1827/header/addmapping", body)
+
+        console.log(body.mappedHeaders)
         try {
+            const headers = await axios.post("http://localhost:1827/header/addmapping", body)
             Swal.fire({
                 position: 'center',
                 icon: 'success',
