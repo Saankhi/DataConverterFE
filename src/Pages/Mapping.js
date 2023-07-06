@@ -36,6 +36,7 @@ export default function Mapping() {
     const [showIP, setShowIp] = useState(false)
     const [selectedOptions, setSelectedOptions] = useState({})
     const [opSelect, setOPSelect] = useState({})
+    const [operator, setOperator] = useState({})
     const navigate = useNavigate();
 
 
@@ -50,8 +51,10 @@ export default function Mapping() {
     }
 
 
-    console.log(opSelect)
-    console.log(selectedOptions)
+    const handleChangeOperator = (e, idx) => {
+        setOperator({ ...operator, [idx]: e.target.value })
+    }
+
 
     useEffect(() => {
         getFileNames();
@@ -104,11 +107,12 @@ export default function Mapping() {
     }
 
 
+
     const onSave = async () => {
         const obj = {}
 
         for (const [key, value] of Object.entries(opSelect)) {
-            obj[value] = selectedOptions[key]
+            obj[value] = [selectedOptions[key], operator[key]]
         }
 
         const body = {
@@ -118,7 +122,6 @@ export default function Mapping() {
             department: key
         }
 
-        console.log(body.mappedHeaders)
         try {
             const headers = await axios.post("http://localhost:1827/header/addmapping", body)
             Swal.fire({
@@ -164,6 +167,11 @@ export default function Mapping() {
                     </Form.Select>)}
 
                 </div>
+                {showIP ? <div style={{ display: 'flex', marginTop: '0.5rem' }}>
+                    <h4>Operator</h4>
+
+                </div> : null}
+
 
                 <div style={{ display: 'flex', marginRight: '40px' }}>
                     {ipFile ? <span><h6 style={{ textAlign: "center", marginTop: "1rem" }}>(Input)</h6></span> : null}
@@ -201,8 +209,35 @@ export default function Mapping() {
                                 )
                             })}
                         </div>
-                        <div style={{ position: "absolute", top: "95%", left: "50%", transform: "translate(-50%, -50%)" }}>
-                            {showIP ? <Button onClick={onSave} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem", marginLeft: '150px' }} >Save</Button>
+                        <div style={{ width: '30rem', height: "calc(100vh - 178px)" }}>
+
+                            {showIP ? (<>
+                                <div style={{ width: '30rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }} className="life">
+                                    {opFileHeadersData.map((item, idx) => {
+                                        return (
+                                            <>
+                                                <li style={{ marginTop: '10px', display: "flex", alignItems: "center" }}>
+                                                    <Form.Select value={operator.idx} onChange={(e) => handleChangeOperator(e, idx)} style={{ width: "10rem", textAlign: "center", margin: "auto" }}>
+                                                        {/* <option>Select</option> */}
+                                                        <option value="none">None</option>
+                                                        <option value="+">Add (+)</option>
+                                                        <option value="-">Substract (-)</option>
+                                                        <option value="*">Multiply (*)</option>
+                                                        <option value="%">Divide (/)</option>
+                                                        <option value="--">Hyphen (-)</option>
+                                                        <option value=",">Comma (,)</option>
+                                                        <option value="_">Underscore (_)</option>
+                                                        <option value="/">Forward Slash (/)</option>
+                                                        <option value="&">And (&)</option>
+                                                    </Form.Select>
+                                                </li><hr />
+                                            </>
+                                        )
+                                    })}
+                                    <Button onClick={onSave} style={{ backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem", width: "7rem", marginLeft: '150px' }} >Save</Button>
+                                </div>
+
+                            </>)
                                 : null}
                         </div>
                         {showIP ? (<div style={{ backgroundColor: '#A9ECFB', width: '25rem', height: "calc(100vh - 178px)", overflowY: "scroll" }} className="hdfc">

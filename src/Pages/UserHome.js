@@ -199,6 +199,59 @@ export default function UserHome() {
     function OPJSONData() {
 
 
+        function switchFn(operator, obj, key) {
+            var result2 = obj;
+            if (!result2) {
+                return key
+            }
+            switch (operator) {
+                case "+":
+                    result2 += key;
+                    break;
+
+                case "-":
+                    result2 -= key;
+                    break;
+
+                case "*":
+                    result2 *= key;
+                    break;
+
+                case "%":
+                    result2 /= key;
+                    break;
+
+                case "--":
+                    result2 += "-" + key;
+                    break;
+
+                case ",":
+                    result2 += "," + key;
+                    break;
+
+                case "_":
+                    result2 += "_" + key;
+                    break;
+
+                case "/":
+                    result2 += "/" + key;
+                    break;
+
+                case "&":
+                    result2 += "/" + key;
+                    break;
+
+                case null:
+                    result2 += " " + key;
+                    break;
+
+                default:
+                    break;
+            }
+
+            return result2;
+        }
+
         function transformInput(ipJSONData, ipHeaders, mappedHeaders) {
             const output = [];
 
@@ -206,17 +259,16 @@ export default function UserHome() {
                 const transformedObj = {};
 
                 for (const key in mappedHeaders) {
-                    const mappedKeys = mappedHeaders[key];
-
-                    for (let j = 0; j < mappedKeys.length; j++) {
-                        const mappedKey = mappedKeys[j];
+                    const outputHeadersValues = mappedHeaders[key];
+                    for (let j = 0; j < outputHeadersValues[0].length; j++) {
+                        const mappedKey = outputHeadersValues[0][j];
 
                         if (ipHeaders.includes(mappedKey)) {
-                            if (!transformedObj[key]) {
-                                transformedObj[key] = "";
-                            }
-
-                            transformedObj[key] += ipJSONData[i][mappedKey] + " ";
+                            transformedObj[key] = switchFn(
+                                outputHeadersValues[1],
+                                transformedObj[key],
+                                ipJSONData[i][mappedKey]
+                            );
                         }
                     }
                 }
@@ -235,8 +287,8 @@ export default function UserHome() {
 
 
 
-    // Converting JSON data to Ouput file type(extract) ::::
 
+    // Converting JSON data to Ouput file type(extract) ::::\
     async function extractParsedData() {
 
 
