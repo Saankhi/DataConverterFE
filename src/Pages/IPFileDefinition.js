@@ -11,12 +11,10 @@ export default function IPFileDefinition() {
     const [inputFileName, setInputFileName] = useState(null)
     const [inputFileType, setInputFileType] = useState(null)
     const [inputFileFormat, setInputFileFormat] = useState(null)
-    const [description, setDescription] = useState(null)
     const [isClicked, setIsClicked] = useState(false)
     const [headersCount, setHeadersCount] = useState(null)
     const [headerTable, setHeaderTable] = useState(false)
     const [headersObj, setHeadersObj] = useState({})
-    const navigate = useNavigate()
 
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
     const userDept = userInfo[0].department
@@ -164,20 +162,20 @@ export default function IPFileDefinition() {
     return (
         <>
             <div className="input-group" style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "3rem", alignItems: "center" }}>
-                <h4>Input File Definition</h4><br />
+                <h4>Input Template Definition</h4><br />
 
                 <div className="file-input" style={{ display: "flex", justifyContent: "space-evenly" }}>
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center" }}>
-                        <FormLabel style={{ width: "7rem" }}>File Name</FormLabel>
+                        <FormLabel style={{ width: "7rem" }}>Template Name</FormLabel>
                         <FormControl type="text" value={inputFileName} onChange={(e) => setInputFileName(e.target.value)} placeholder="Name of the input file format" />
                     </Form.Group>
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "18rem" }}>
-                        <FormLabel style={{ width: "13rem" }}>File Format</FormLabel>
+                        <FormLabel style={{ width: "13rem" }}>Template Format</FormLabel>
                         <Form.Select value={inputFileFormat} onChange={(e) => setInputFileFormat(e.target.value)}>
                             <option>Select type</option>
-                            <option value="text/xml">XML</option>
+                            {/* <option value="text/xml">XML</option> */}
                             <option value=".csv">CSV</option>
                             <option value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">XLSX</option>
                         </Form.Select>
@@ -185,7 +183,7 @@ export default function IPFileDefinition() {
 
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "16rem" }}>
-                        <FormLabel style={{ width: "12rem" }}>File Type</FormLabel>
+                        <FormLabel style={{ width: "12rem" }}>Template Type</FormLabel>
                         <Form.Select value={inputFileType} onChange={(e) => setInputFileType(e.target.value)}>
                             <option>Select type</option>
                             <option value="Input">Input</option>

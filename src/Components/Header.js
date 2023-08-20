@@ -8,7 +8,6 @@ import ProfilePopUp from "./ProfilePopUp";
 export default function Header() {
 
     const [open, setOpen] = useState(false)
-    const [modalShow, setModalShow] = useState(false)
 
     return (
         <>
@@ -31,7 +30,7 @@ export default function Header() {
                             <Nav className="me-auto">
                                 <Nav.Link href="/adminhome"><Button variant="light" style={{ backgroundColor: "black", color: "white" }}>Home</Button></Nav.Link>
                                 <Nav.Link href="/mytemplates"><Button variant="light" style={{ backgroundColor: "black", color: "white" }}>My Templates</Button></Nav.Link>
-                                <Nav.Link href="/mapping"><Button variant="light" style={{ backgroundColor: "black", color: "white" }}>Mapping</Button></Nav.Link>
+                                <Nav.Link href="/mymappings"><Button variant="light" style={{ backgroundColor: "black", color: "white" }}>My Mappings</Button></Nav.Link>
                                 <Nav.Link href="/aboutus"><Button variant="light" style={{ backgroundColor: "black", color: "white" }}>About Us</Button></Nav.Link>
                                 <Nav.Link href="/contactus"><Button variant="light" style={{ backgroundColor: "black", color: "white" }}>Contact Us</Button></Nav.Link>
                                 <div style={{ display: "flex", flexDirection: "column" }}>
@@ -40,7 +39,6 @@ export default function Header() {
                                         show={open}
                                         onHide={() => setOpen(false)}
                                     />
-                                    {/* <p style={{color:"white"}}>Profile</p> */}
                                 </div>
                             </Nav>
                         </Nav>

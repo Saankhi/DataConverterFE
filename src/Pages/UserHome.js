@@ -298,7 +298,7 @@ export default function UserHome() {
             var newWb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(newWb, jsonSheet, "Sheet1")
             return (
-                XLSX.writeFile(newWb, outputFileName + ".xlsx"),
+                XLSX.writeFile(newWb, outputFileName + "_" + userInfo[0].firstName + "-" + userInfo[0].lastName + "_" + Date().toLocaleString() + ".xlsx"),
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -321,7 +321,7 @@ export default function UserHome() {
                 const url = URL.createObjectURL(blob);
 
                 const link = document.createElement("a");
-                link.download = outputFileName + ".xml";
+                link.download = outputFileName + "_" + userInfo[0].firstName + "-" + userInfo[0].lastName + "_" + Date().toLocaleString() + ".xml";
                 link.href = url;
                 link.click();
             } else {
@@ -332,7 +332,7 @@ export default function UserHome() {
                 const url = URL.createObjectURL(blob);
 
                 const link = document.createElement("a");
-                link.download = outputFileName + ".json";
+                link.download = outputFileName + "_" + userInfo[0].firstName + "-" + userInfo[0].lastName + "_" + Date().toLocaleString() + ".json";
                 link.href = url;
                 link.click();
 

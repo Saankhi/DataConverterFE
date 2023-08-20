@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
@@ -8,20 +8,21 @@ import * as AiIcons from "react-icons/ai";
 import Swal from "sweetalert2";
 
 
-
 export default function MyTemplates() {
 
-    const [lgShow, setLgShow] = useState(false);
-    const [mappings, setMappings] = useState([]);
-    const [mappedHeaders, setMappedHeaders] = useState({})
+
     const navigate = useNavigate();
+    const [lgShow, setLgShow] = useState(false);
+    const [templates, setTemplates] = useState([]);
+    const [templateHeaders, setTemplateHeaders] = useState([])
 
     const onHandleClick = () => {
         navigate("/template")
     }
 
+
     useEffect(() => {
-        getMappings();
+        getTemplates();
     }, [])
 
 
@@ -29,10 +30,10 @@ export default function MyTemplates() {
     const key = userInfo[0].department
 
 
-    const getMappings = async () => {
-        const result = await axios.get("http://localhost:1827/header/getmappings/" + key)
+    const getTemplates = async () => {
+        const result = await axios.get("http://localhost:1827/header/allfiles/" + key)
         try {
-            setMappings(result.data.mappingData)
+            setTemplates(result.data.fileTypeDetails)
         } catch (err) {
             Swal.fire({
                 icon: 'error',
@@ -44,17 +45,14 @@ export default function MyTemplates() {
     }
 
 
-    const getMappedHeaders = async (ipFile, opFile) => {
+    const getTemplatesHeaders = async (key) => {
 
-        const body = {
-            dept: key,
-            ip: ipFile,
-            op: opFile
-        }
-
-        const result = await axios.post("http://localhost:1827/header/getmappedHeaders", body)
         try {
-            setMappedHeaders(result.data.mappingData)
+            const result = await axios.get("http://localhost:1827/header/allheaders/" + key)
+            const updatedResult = result.data.headersDetails.map((header) => {
+                return header.headerValues;
+            })
+            setTemplateHeaders(updatedResult);
         } catch (err) {
             Swal.fire({
                 icon: 'error',
@@ -63,7 +61,6 @@ export default function MyTemplates() {
                 footer: '<a href="">Why do I have this issue?</a>'
             })
         }
-
     }
 
     return (
@@ -73,29 +70,45 @@ export default function MyTemplates() {
             </div>
             <h2 style={{ margin: '50px' }}>My Templates</h2>
             <div className="container" style={{ overflowY: "scroll", maxHeight: "calc(100vh - 159px)" }}>
-                {mappings.length > 0 ? <Table>
+                {templates.length > 0 ? <Table>
                     <thead style={{ border: '1px solid black', borderRadius: '10px' }}>
 
                         <tr>
-                            <th style={{ color: '#12B5B0' }}>Input File Name</th>
-                            <th style={{ color: '#12B5B0' }}>Output File Name</th>
-                            <th style={{ color: '#12B5B0' }}>Mapping</th>
+                            <th style={{ color: '#12B5B0' }}>S.No</th>
+                            <th style={{ color: '#12B5B0' }}>Template Name</th>
+                            <th style={{ color: '#12B5B0' }}>Template Type</th>
+                            <th style={{ color: '#12B5B0' }}>Template Format</th>
+                            <th style={{ color: '#12B5B0' }}>View Details</th>
                         </tr>
 
                     </thead>
                     <tbody>
 
-                        {mappings.map((mapping) => {
-                            const ipFile = mapping.ipFile
-                            const opFile = mapping.opFile
+                        {templates.map((template, idx) => {
+                            const tempName = template.fileName
+
+                            var fileFormat = "";
+                            switch (template.fileFormat) {
+                                case ".csv":
+                                    fileFormat = "CSV";
+                                    break;
+                                case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                                    fileFormat = "XLSX";
+                                    break;
+                                default:
+                                    break;
+                            }
+
                             return (
                                 <>
                                     <tr style={{ margin: '20px' }}>
-                                        <td>{ipFile}</td>
-                                        <td>{opFile}</td>
+                                        <td>{idx + 1}</td>
+                                        <td>{template.fileName}</td>
+                                        <td>{template.fileType}</td>
+                                        <td>{fileFormat}</td>
                                         <td>
                                             <Button
-                                                onClick={() => { setLgShow(true); getMappedHeaders(ipFile, opFile) }}
+                                                onClick={() => { setLgShow(true); getTemplatesHeaders(tempName) }}
                                                 variant="light"
                                                 style={{ backgroundColor: '#12B5B0', color: 'white' }}
                                             >
@@ -105,35 +118,35 @@ export default function MyTemplates() {
                                                 size="lg"
                                                 show={lgShow}
                                                 onHide={() => setLgShow(false)}
-                                                aria-labelledby="example-modal-sizes-title-lg"
+                                                aria-labelledby="contained-modal-title-vcenter"
+                                                centered
+
                                             >
-                                                <Modal.Header closeButton>
+                                                <Modal.Header style={{ color: '#12B5B0', fontSize: 25 }} closeButton>
+                                                    Template Headers
                                                 </Modal.Header>
-                                                <Modal.Body>
-                                                    <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                                                        <div><h4 style={{ color: '#12B5B0' }}>Input Field</h4><br />
-                                                            {
-                                                                Object.entries(mappedHeaders).map(
-                                                                    (arr) => {
-
-                                                                        return <p>{arr[1].join(', ')}<AiIcons.AiOutlineArrowRight style={{ fontSize: '1rem', margin: 'auto', marginLeft: '2rem' }} /></p>
-                                                                    }
+                                                <Modal.Body style={{ overflowY: "scroll", maxHeight: "calc(100vh - 159px)" }}>
+                                                    <Table>
+                                                        <thead style={{ border: '1px solid black', borderRadius: '10px' }}>
+                                                            <tr>
+                                                                <th style={{ color: '#12B5B0' }}>S.No</th>
+                                                                <th style={{ color: '#12B5B0' }}>Header Values</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {templateHeaders.map((header, idx) => {
+                                                                return (
+                                                                    <>
+                                                                        <tr style={{ margin: '20px' }}>
+                                                                            <td>Header {idx + 1} : </td>
+                                                                            <td>{header}</td>
+                                                                        </tr>
+                                                                    </>
                                                                 )
-                                                            }
-                                                        </div>
-                                                        <div>
-                                                            <h4 style={{ color: '#12B5B0' }}>Output Field</h4><br />
-                                                            {
-                                                                Object.entries(mappedHeaders).map(
-                                                                    (arr) => {
-                                                                        return <p>{arr[0]}</p>
-                                                                    }
-                                                                )
-                                                            }
+                                                            })}
 
-
-                                                        </div>
-                                                    </div>
+                                                        </tbody>
+                                                    </Table>
                                                 </Modal.Body>
                                             </Modal>
                                         </td>
@@ -144,7 +157,7 @@ export default function MyTemplates() {
                         })}
 
                     </tbody>
-                </Table> : <p style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}><b>No mappings yet! Create one by <Link to="/mapping" style={{ color: "#12B5B0" }}>clicking here.</Link></b></p>}
+                </Table> : <p style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}><b>No templates yet! Create one by <Link to="/template" style={{ color: "#12B5B0" }}>clicking here.</Link></b></p>}
 
             </div>
         </>

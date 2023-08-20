@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import axios from "axios"
-import Header from "../Components/Header"
 import { Form, FormLabel, FormControl, Button, Table, InputGroup } from "react-bootstrap"
 import * as MdIcons from "react-icons/md"
 import { useNavigate } from "react-router-dom"
@@ -12,7 +11,6 @@ export default function OPFileDefinition() {
     const [outputFileName, setOutputFileName] = useState(null)
     const [outputFileType, setOutputFileType] = useState(null)
     const [outputFileFormat, setOutputFileFormat] = useState(null)
-    const [description, setDescription] = useState(null)
     const [isClicked, setIsClicked] = useState(false)
     const [headersCount, setHeadersCount] = useState(null)
     const [headerTable, setHeaderTable] = useState(false)
@@ -166,28 +164,28 @@ export default function OPFileDefinition() {
         <>
 
             <div className="input-group" style={{ display: "flex", flexDirection: "column", justifyContent: "center", marginTop: "3rem", alignItems: "center" }}>
-                <h4>Output File Definition</h4><br />
+                <h4>Output Template Definition</h4><br />
 
                 <div className="file-input" style={{ display: "flex", justifyContent: "space-evenly" }}>
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center" }}>
-                        <FormLabel style={{ width: "7rem" }}>File Name</FormLabel>
+                        <FormLabel style={{ width: "7rem" }}>Template Name</FormLabel>
                         <FormControl type="text" value={outputFileName} onChange={(e) => setOutputFileName(e.target.value)} placeholder="Name of the output file format" />
                     </Form.Group>
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "15rem" }}>
-                        <FormLabel style={{ width: "8rem" }}>File Type</FormLabel>
+                        <FormLabel style={{ width: "8rem" }}>Template Type</FormLabel>
                         <Form.Select value={outputFileFormat} onChange={(e) => setOutputFileFormat(e.target.value)}>
                             <option>Select type</option>
-                            <option value=".json">JSON</option>
-                            <option value="text/xml">XML</option>
+                            {/* <option value=".json">JSON</option>
+                            <option value="text/xml">XML</option> */}
                             <option value=".csv">CSV</option>
                             <option value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">XLSX</option>
                         </Form.Select>
                     </Form.Group>
 
                     <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "16rem" }}>
-                        <FormLabel style={{ width: "12rem" }}>File Type</FormLabel>
+                        <FormLabel style={{ width: "12rem" }}>Template Type</FormLabel>
                         <Form.Select value={outputFileType} onChange={(e) => setOutputFileType(e.target.value)}>
                             <option>Select type</option>
                             <option value="Output">Output</option>
