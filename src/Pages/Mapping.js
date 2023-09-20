@@ -131,14 +131,24 @@ export default function Mapping() {
                 showConfirmButton: false,
                 timer: 1500
             })
-            navigate('/mytemplates')
+            navigate('/mymappings')
 
         } catch (err) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!'
-            })
+
+            if (err.response && err.response.status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: err.response.data.message
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!'
+                })
+            }
+
         }
     }
 

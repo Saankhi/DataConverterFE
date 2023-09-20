@@ -53,7 +53,7 @@ export default function IPFileDefinition() {
 
         const body = {
             fileName: inputFileName,
-            fileType: inputFileType,
+            fileType: "Input",
             fileFormat: inputFileFormat,
             headersArray: Object.values(headersObj),
             department: userDept
@@ -182,19 +182,10 @@ export default function IPFileDefinition() {
                     </Form.Group>
 
 
-                    <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "16rem" }}>
-                        <FormLabel style={{ width: "12rem" }}>Template Type</FormLabel>
-                        <Form.Select value={inputFileType} onChange={(e) => setInputFileType(e.target.value)}>
-                            <option>Select type</option>
-                            <option value="Input">Input</option>
-                        </Form.Select>
-                    </Form.Group>
-
-
                 </div><br />
 
 
-                {inputFileName && inputFileType ?
+                {inputFileName && inputFileFormat ?
                     <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button><br /></> :
                     <Button disabled style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button>}
 

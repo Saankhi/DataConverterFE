@@ -99,7 +99,7 @@ export default function MyMappings() {
                                                 variant="light"
                                                 style={{ backgroundColor: '#12B5B0', color: 'white' }}
                                             >
-                                                View Format
+                                                View Mapping
                                             </Button>
                                             <Modal
                                                 size="lg"

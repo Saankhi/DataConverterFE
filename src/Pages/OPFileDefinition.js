@@ -51,7 +51,7 @@ export default function OPFileDefinition() {
 
         const body = {
             fileName: outputFileName,
-            fileType: outputFileType,
+            fileType: "Output",
             fileFormat: outputFileFormat,
             headersArray: Object.values(headersObj),
             department: userDept
@@ -184,18 +184,10 @@ export default function OPFileDefinition() {
                         </Form.Select>
                     </Form.Group>
 
-                    <Form.Group style={{ display: "flex", padding: "1rem", alignItems: "center", width: "16rem" }}>
-                        <FormLabel style={{ width: "12rem" }}>Template Type</FormLabel>
-                        <Form.Select value={outputFileType} onChange={(e) => setOutputFileType(e.target.value)}>
-                            <option>Select type</option>
-                            <option value="Output">Output</option>
-                        </Form.Select>
-                    </Form.Group>
-
                 </div><br />
 
 
-                {outputFileName && outputFileType ?
+                {outputFileName && outputFileFormat ?
                     <><Button onClick={addHeader} style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button><br /></> :
                     <Button disabled style={{ marginTop: "1rem", marginRight: "30rem", backgroundColor: "#12B5B0", border: "none", borderRadius: "1rem" }}>+Add Header</Button>}
 

@@ -112,7 +112,7 @@ export default function MyTemplates() {
                                                 variant="light"
                                                 style={{ backgroundColor: '#12B5B0', color: 'white' }}
                                             >
-                                                View Format
+                                                View Template
                                             </Button>
                                             <Modal
                                                 size="lg"
