@@ -39,6 +39,17 @@ export default function Mapping() {
     const [operator, setOperator] = useState({})
     const navigate = useNavigate();
 
+    useEffect(() => {
+        getFileNames();
+    }, [])
+
+    useEffect(() => {
+        setOPFileHeadersData();
+    }, [opFile])
+
+    useEffect(() => {
+        setIPFileHeadersData()
+    }, [ipFile])
 
     const handleChangeOP = (idx, e) => {
 
@@ -54,11 +65,6 @@ export default function Mapping() {
     const handleChangeOperator = (e, idx) => {
         setOperator({ ...operator, [idx]: e.target.value })
     }
-
-
-    useEffect(() => {
-        getFileNames();
-    }, [])
 
 
     const userInfo = JSON.parse(localStorage.getItem('userInfo'))
@@ -106,7 +112,8 @@ export default function Mapping() {
         }
     }
 
-
+    console.log('opFileHeadersData', opFileHeadersData)
+    console.log('ipFileHeadersData', ipFileHeadersData)
 
     const onSave = async () => {
         const obj = {}
@@ -198,17 +205,17 @@ export default function Mapping() {
                         </Form.Select>)}
                 </div>
             </div>
-            {opFileHeadersData.length > 0 || ipFileHeadersData.length > 0 ? (<>
+            {opFileHeadersData?.length > 0 || ipFileHeadersData?.length > 0 ? (<>
                 {showOP ? (<>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <div style={{ backgroundColor: '#12B5B0', width: '30rem', height: "calc(100vh - 178px)" }} className="life">
-                            {opFileHeadersData.map((item, idx) => {
+                            {opFileHeadersData?.map((item, idx) => {
                                 return (
                                     <>
                                         <li style={{ marginTop: '10px', display: "flex", alignItems: "center" }}>
                                             <Form.Select value={opSelect.idx} onChange={(e) => handleChangeOP(idx, e)} style={{ width: "10rem", textAlign: "center", margin: "auto" }}>
                                                 <option>Select</option>
-                                                {opFileHeadersData.map((file) => {
+                                                {opFileHeadersData?.map((file) => {
                                                     return (
                                                         <option value={file.headerValues}>{file.headerValues}</option>
                                                     )
@@ -223,7 +230,7 @@ export default function Mapping() {
 
                             {showIP ? (<>
                                 <div style={{ width: '30rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }} className="life">
-                                    {opFileHeadersData.map((item, idx) => {
+                                    {opFileHeadersData?.map((item, idx) => {
                                         return (
                                             <>
                                                 <li style={{ marginTop: '10px', display: "flex", alignItems: "center" }}>
@@ -252,7 +259,7 @@ export default function Mapping() {
                         </div>
                         {showIP ? (<div style={{ backgroundColor: '#A9ECFB', width: '25rem', height: "calc(100vh - 178px)", overflowY: "scroll" }} className="hdfc">
 
-                            {ipFileHeadersData.map((file, idx) => {
+                            {ipFileHeadersData?.map((file, idx) => {
                                 return (
                                     <><li style={{ marginTop: '10px' }}>
                                         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
@@ -267,7 +274,7 @@ export default function Mapping() {
                                                     renderValue={(selected) => selected.join(', ')}
                                                     MenuProps={MenuProps}
                                                 >
-                                                    {ipFileHeadersData.map((name) => (
+                                                    {ipFileHeadersData?.map((name) => (
                                                         <MenuItem key={name.headerValues} value={name.headerValues}>
                                                             <Checkbox checked={selectedOptions[idx].includes(name.headerValues)} />
                                                             <ListItemText primary={name.headerValues} />

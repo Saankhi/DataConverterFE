@@ -9,7 +9,6 @@ export default function OPFileDefinition() {
 
 
     const [outputFileName, setOutputFileName] = useState(null)
-    const [outputFileType, setOutputFileType] = useState(null)
     const [outputFileFormat, setOutputFileFormat] = useState(null)
     const [isClicked, setIsClicked] = useState(false)
     const [headersCount, setHeadersCount] = useState(null)
@@ -33,24 +32,23 @@ export default function OPFileDefinition() {
         setHeadersObj(obj)
     }
 
-
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            //autofocus.
-        }
-    }
-
     const handleChange = (key, e) => {
         setHeadersObj({ ...headersObj, [key]: { "headerValue": e.target.value } })
     }
 
 
-
+    const outputTrimmedValue = () => {
+        if (outputFileName.endsWith(' ')) {
+            return outputFileName.trim();
+        } else {
+            return outputFileName;
+        }
+    }
 
     const onAdd = async () => {
 
         const body = {
-            fileName: outputFileName,
+            fileName: outputTrimmedValue(),
             fileType: "Output",
             fileFormat: outputFileFormat,
             headersArray: Object.values(headersObj),

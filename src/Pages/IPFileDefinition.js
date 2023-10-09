@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react"
 import axios from "axios"
 import { Form, FormLabel, FormControl, Button, Table, InputGroup } from "react-bootstrap"
 import * as MdIcons from "react-icons/md"
-import { useNavigate } from "react-router-dom"
 import Swal from "sweetalert2"
 
 export default function IPFileDefinition() {
 
 
     const [inputFileName, setInputFileName] = useState(null)
-    const [inputFileType, setInputFileType] = useState(null)
     const [inputFileFormat, setInputFileFormat] = useState(null)
     const [isClicked, setIsClicked] = useState(false)
     const [headersCount, setHeadersCount] = useState(null)
@@ -38,21 +36,23 @@ export default function IPFileDefinition() {
     }
 
 
-
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-            //autofocus.
-        }
-    }
-
     const handleChange = (key, e) => {
         setHeadersObj({ ...headersObj, [key]: { "headerValue": e.target.value } })
+    }
+
+
+    const inputTrimmedValue = () => {
+        if (inputFileName.endsWith(' ')) {
+            return inputFileName.trim();
+        } else {
+            return inputFileName;
+        }
     }
 
     const onAdd = async () => {
 
         const body = {
-            fileName: inputFileName,
+            fileName: inputTrimmedValue(),
             fileType: "Input",
             fileFormat: inputFileFormat,
             headersArray: Object.values(headersObj),
