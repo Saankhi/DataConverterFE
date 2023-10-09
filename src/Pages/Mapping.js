@@ -112,8 +112,6 @@ export default function Mapping() {
         }
     }
 
-    console.log('opFileHeadersData', opFileHeadersData)
-    console.log('ipFileHeadersData', ipFileHeadersData)
 
     const onSave = async () => {
         const obj = {}

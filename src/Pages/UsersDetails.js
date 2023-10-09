@@ -49,7 +49,6 @@ export default function UserDetails() {
             .get('http://localhost:1827/auth/allusers')
             .then(response => {
                 setData(response.data.details);
-                console.log(response.data.details);
             })
             .catch(error => {
                 console.error('Error fetching data:', error);
@@ -57,25 +56,25 @@ export default function UserDetails() {
     };
 
     const deletehandler = (mobile) => {
-    axios.delete('http://localhost:1827/auth/delteuser/' + mobile)
-    .then((response) => {
-        const deletedata = data.filter((row) => row.mobile !== mobile);
-        setData(deletedata);
-        getDetails();
-    })
+        axios.delete('http://localhost:1827/auth/delteuser/' + mobile)
+            .then((response) => {
+                const deletedata = data.filter((row) => row.mobile !== mobile);
+                setData(deletedata);
+                getDetails();
+            })
     }
 
     const Deletepop = (key) => {
         const swalWithBootstrapButtons = Swal.mixin({
-          customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-          },
-          buttonsStyling: false
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
         })
-      
+
         swalWithBootstrapButtons.fire({
-          title: 'Delete',
+            title: 'Delete',
             text: 'Are you sure ?',
             icon: 'question',
             showCancelButton: true,
@@ -83,33 +82,33 @@ export default function UserDetails() {
             cancelButtonText: 'No, cancel!',
             reverseButtons: true
         }).then((result) => {
-          if (result.isConfirmed) {
-            swalWithBootstrapButtons.fire(
-              'Deleted!',
-              'You have successfully Deleted.',
-              'success'
-            )
-            deletehandler(key)
-          } else if (
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            swalWithBootstrapButtons.fire(
-              'Cancelled',
-                'Failed',
-                'error'
-            )
-          }
+            if (result.isConfirmed) {
+                swalWithBootstrapButtons.fire(
+                    'Deleted!',
+                    'You have successfully Deleted.',
+                    'success'
+                )
+                deletehandler(key)
+            } else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Failed',
+                    'error'
+                )
+            }
         })
-      }
+    }
 
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '2rem' , color:"#12B5B0"}}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '2rem', color: "#12B5B0" }}>
                 <h2>User Management</h2>
-              
-                <Button variant="light"  style={{ backgroundColor: "#12B5B0" , color:"white" }}  onClick={() => setModalShow(true)}>
-                Add Admin
+
+                <Button variant="light" style={{ backgroundColor: "#12B5B0", color: "white" }} onClick={() => setModalShow(true)}>
+                    Add Admin
                 </Button>
 
                 <Userspopup

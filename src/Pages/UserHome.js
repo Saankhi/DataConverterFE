@@ -194,6 +194,19 @@ export default function UserHome() {
 
     }
 
+    const isValidData = (arr) => {
+        arr.map((obj) => {
+            for (const key in obj) {
+                const value = obj[key]
+                if (value < 0) {
+                    obj[key] = NaN;
+                } else {
+                    obj[key] = value;
+                }
+            }
+        })
+        return arr;
+    }
     // Data conersion to opData 
 
     function OPJSONData() {
@@ -281,7 +294,7 @@ export default function UserHome() {
 
         const output = transformInput(ipJSONData, ipHeaders, mappedHeaders);
 
-        setParsedData(output)
+        setParsedData(isValidData(output))
     }
 
 
