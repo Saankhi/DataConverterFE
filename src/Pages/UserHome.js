@@ -311,7 +311,7 @@ export default function UserHome() {
             var newWb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(newWb, jsonSheet, "Sheet1")
             return (
-                XLSX.writeFile(newWb, outputFileName + "_" + userInfo[0].firstName + "-" + userInfo[0].lastName + "_" + Date().toLocaleString() + ".xlsx"),
+                XLSX.writeFile(newWb, outputFileName + "_" + userInfo[0].firstName + "-" + userInfo[0].lastName + "_" + Date().toLocaleString() + outputFileType),
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
